@@ -87,9 +87,9 @@ fi
 
 # Database
 echo "Creating DB Container."
-docker create -p $db_port:27017 -e MONGO_INITDB:$db_name \
--e MONGO_INITDB_ROOT_USERNAME:$db_user \
--e MONGO_INITDB_ROOT_PASSWORD:$db_password \
+docker create -p $db_port:27017 -e MONGO_INITDB=$db_name \
+-e MONGO_INITDB_ROOT_USERNAME=$db_user \
+-e MONGO_INITDB_ROOT_PASSWORD=$db_password \
 --name FileFighterDB mongo:latest >/dev/null 2>&1
 docker start FileFighterDB >/dev/null 2>&1
 
