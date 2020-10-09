@@ -1,3 +1,5 @@
+# DO NOT CHANGE OR REMOVE THIS FILE!
+
 # Services
 rest_port=8080
 frontend_port=80
@@ -7,4 +9,3 @@ db_user=root
 db_password=
 db_port=27017
 db_name=filefighter
-db_password=asdasdasd
