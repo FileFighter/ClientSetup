@@ -9,20 +9,15 @@ db_name="$(read ./config.cfg db_name)"
 db_user="$(read ./config.cfg  db_user)"
 db_password="$(read ./config.cfg  db_password)"
 
-if [ $db_password = ""]; then
+if [ $db_password = "" ]; then
   # set it somehow.
   db_password="asdasdasd"
   write ./config.cfg db_password $db_password
 fi
 
-printf -- "%s: %s\n" "frontend_port" "$frontend_port";
-printf -- "%s: %s\n" "rest_port" "$rest_port";
-printf -- "%s: %s\n" "db_user" "$db_user";
-printf -- "%s: %s\n" "db_password" "$db_password";
-
 # Check if docker is running
 if ! docker info >/dev/null 2>&1; then
-    echo "Docker is not running, start it first and retry."
+    echo "Docker is not running, install it or first and retry."
     exit 1
 fi
 
@@ -43,5 +38,16 @@ docker create -e DB_USERNAME=$db_user \
 -e DB_PASSWORD=$db_password \
 -e DB_NAME=$db_name \
 -p $rest_port:8080 \
---name FileFighterRESTApi filefighter/rest:0.0.1
-docker start FileFighterRESTApi
+--name FileFighterREST filefighter/rest:latest
+docker start FileFighterREST
+
+# Frontend
+echo "Create Frontend Container."
+docker create -p $frontend_port:5000 \
+-e REST_PORT=$rest_port \
+--name FileFighterFrontend filefighter/frontend:latest
+docker start FileFighterFrontend
+
+# DataHandler
+
+# TODO: Build it first.
