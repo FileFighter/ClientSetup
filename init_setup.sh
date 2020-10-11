@@ -7,14 +7,20 @@ if ! docker info >/dev/null 2>&1; then
     exit 1
 fi
 
+# setup variables
 configFilePath=$(pwd)/config.cfg
+restname="FileFighterREST"
+frontendname="FileFighterFrontend"
+dbname="FileFighterDB"
+networkname="FileFighterNetwork"
+
 # Startup Message.
 echo ""
 echo "-------------------------< FileFighter >--------------------------"
-echo "->           Version 0.0.1 last updated at 09.10.20             <-"
-echo "->        Developed by Gimleux, Valentin, Open-Schnick.         <-"
-echo "->       Development Blog: https://filefighter.github.io        <-"
-echo "-> The code can be found at: https://www.github.com/filefighter <-"
+echo "|             Version 0.0.1 last updated at 10.10.20             |"
+echo "|         Developed by Gimleux, Valentin, Open-Schnick.          |"
+echo "|       Development Blog: https://filefighter.github.io          |"
+echo "|  The code can be found at: https://www.github.com/filefighter  |"
 echo "--------------------< Started Initial Setup >---------------------"
 echo ""
 echo "Docker prequesites matched. Docker instance running."
@@ -70,49 +76,56 @@ fi
 echo "Finished reading config. Building containers..."
 
 # Check for already running CONTAINERS.
-if [[ $(docker ps --format "{{.Names}}" | grep FileFighterREST) ]] || [[ $(docker ps --format "{{.Names}}" | grep FileFighterFrontend) ]] || [[ $(docker ps --format "{{.Names}}" | grep FileFighterDB) ]]; then
+if [[ $(docker ps --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps --format "{{.Names}}" | grep $dbname) ]]; then
 echo ""
-echo "A container with already exists with the name FileFighterREST or FileFighterFrontend or FileFighterDB."
+echo "A container with already exists with the name $restname or $frontendname or $dbname."
 echo "Maybe its the second time that you run this script. If not please remove these containers."
 echo "If you want to check for updated run the update.sh script."
 echo ""
   exit 1;
 fi
-#docker stop FileFighterREST
-#docker rm FileFighterREST
-#docker stop FileFighterFrontend
-#docker rm FileFighterFrontend
 
-# CREATE CONTAINERS.
+# Network
+echo "Creating necessary network."
+docker network create $networkname >/dev/null 2>&1
 
 # Database
 echo "Creating DB Container."
-docker create -p $db_port:27017 -e MONGO_INITDB=$db_name \
+docker create \
+-e MONGO_INITDB=$db_name \
 -e MONGO_INITDB_ROOT_USERNAME=$db_user \
 -e MONGO_INITDB_ROOT_PASSWORD=$db_password \
---name FileFighterDB mongo:latest >/dev/null 2>&1
-docker start FileFighterDB >/dev/null 2>&1
+--network $networkname \
+--name $dbname mongo:latest >/dev/null 2>&1
+docker start $dbname >/dev/null 2>&1
+
+sleep 3 # waiting 3 seconds for mongo to start.
 
 # REST APP
 echo "Creating REST Container."
-docker create -e DB_USERNAME=$db_user \
+docker create \
+-e DB_USERNAME=$db_user \
 -e DB_PASSWORD=$db_password \
 -e DB_NAME=$db_name \
+-e DB_CONTAINER_NAME=$dbname \
+-e SPRING_PROFILES_ACTIVE="prod" \
 -p $rest_port:8080 \
---name FileFighterREST filefighter/rest:latest >/dev/null 2>&1
-docker start FileFighterREST >/dev/null 2>&1
+--network $networkname \
+--name $restname filefighter/rest:latest >/dev/null 2>&1
+docker start $restname >/dev/null 2>&1
 
 # Frontend
 echo "Creating Frontend Container."
-docker create -p $frontend_port:5000 \
+docker create \
 -e REST_PORT=$rest_port \
---name FileFighterFrontend filefighter/frontend:0.0.1 >/dev/null 2>&1
-docker start FileFighterFrontend >/dev/null 2>&1
+ -p $frontend_port:5000 \
+--name $frontendname filefighter/frontend:0.0.1 >/dev/null 2>&1
+docker start $frontendname >/dev/null 2>&1
 
 # DataHandler
 
 
 echo ""
+echo "Finished Building FileFighter."
 echo "Hosting Frontend at: http://localhost:$frontend_port/"
-echo "--------------------< Finished Initial Setup >--------------------"
 echo ""
