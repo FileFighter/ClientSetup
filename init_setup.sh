@@ -80,7 +80,7 @@ if [[ $(docker ps --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -
 echo ""
 echo "A container with already exists with the name $restname or $frontendname or $dbname."
 echo "Maybe its the second time that you run this script. If not please remove these containers."
-echo "If you want to check for updated run the update.sh script."
+echo "If you want to check for updates, run the update.sh script."
 echo ""
   exit 1;
 fi
