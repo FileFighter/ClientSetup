@@ -12,9 +12,9 @@ read() { # path, key -> value
 }
 
 delete() { # path, key
-  test -f "$1" && sed -i "" -e "/^$(echo $2 | sed_escape).*$/d" "$1"
-  # UNIX VERSION:
-  # test -f "$1" && sed -i "/^$(echo $2 | sed_escape).*$/d" "$1"
+  test -f "$1" && sed -i "/^$(echo $2 | sed_escape).*$/d" "$1"
+  # MacOs
+  # test -f "$1" && sed -i "" -e "/^$(echo $2 | sed_escape).*$/d" "$1"
 }
 
 has_key() { # path, key
