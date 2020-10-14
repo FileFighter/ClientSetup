@@ -17,7 +17,7 @@ networkname="FileFighterNetwork"
 # Startup Message.
 echo ""
 echo "-------------------------< FileFighter >--------------------------"
-echo "|             Version 0.0.1 last updated at 10.10.20             |"
+echo "|             Version 0.0.1 last updated at 14.10.20             |"
 echo "|         Developed by Gimleux, Valentin, Open-Schnick.          |"
 echo "|       Development Blog: https://filefighter.github.io          |"
 echo "|  The code can be found at: https://www.github.com/filefighter  |"
@@ -90,7 +90,7 @@ echo "Creating necessary network."
 docker network create $networkname >/dev/null 2>&1
 
 # Database
-echo "Creating DB Container."
+echo "Creating latest DB Container."
 docker create \
 -e MONGO_INITDB=$db_name \
 -e MONGO_INITDB_ROOT_USERNAME=$db_user \
@@ -102,7 +102,7 @@ docker start $dbname >/dev/null 2>&1
 sleep 3 # waiting 3 seconds for mongo to start.
 
 # REST APP
-echo "Creating REST Container."
+echo "Creating latest REST Container."
 docker create \
 -e DB_USERNAME=$db_user \
 -e DB_PASSWORD=$db_password \
@@ -115,11 +115,11 @@ docker create \
 docker start $restname >/dev/null 2>&1
 
 # Frontend
-echo "Creating Frontend Container."
+echo "Creating latest Frontend Container."
 docker create \
 -e REST_PORT=$rest_port \
  -p $frontend_port:5000 \
---name $frontendname filefighter/frontend:0.0.1 >/dev/null 2>&1
+--name $frontendname filefighter/frontend:latest >/dev/null 2>&1
 docker start $frontendname >/dev/null 2>&1
 
 # DataHandler
