@@ -9,3 +9,6 @@ db_user=root
 db_password=
 db_port=27017
 db_name=filefighter
+
+# Versions
+use_stable_versions=true
