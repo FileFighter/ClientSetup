@@ -79,7 +79,7 @@ fi
 if ! [[ $db_password ]]; then
   # Create new Password
   echo "Creating new random password for the database."
-  db_password="asdasdasd"
+  db_password=$(wget -qO- "https://www.passwordrandom.com/query?command=password&scheme=rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
   write $configFilePath db_password $db_password
 fi
 
