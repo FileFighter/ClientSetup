@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 source lib/config.shlib; # load the config library functions
+source lib/dockertags.shlib # load docker functions.
 
 # Check if docker is running
 if ! docker info >/dev/null 2>&1; then
@@ -14,10 +15,14 @@ frontendname="FileFighterFrontend"
 dbname="FileFighterDB"
 networkname="FileFighterNetwork"
 
+# latest stable versions.
+frontendVersion="latest" #"$(getTagsByName filefighter/frontend v | tail -1)"
+restVersion="latest" #$(getTagsByName filefighter/rest v | tail -1)"
+
 # Startup Message.
 echo ""
 echo "-------------------------< FileFighter >--------------------------"
-echo "|             Version 0.0.1 last updated at 10.10.20             |"
+echo "|             Version 0.0.1. Last updated at 14.10.20            |"
 echo "|         Developed by Gimleux, Valentin, Open-Schnick.          |"
 echo "|       Development Blog: https://filefighter.github.io          |"
 echo "|  The code can be found at: https://www.github.com/filefighter  |"
@@ -33,35 +38,41 @@ db_port="$(read ./config.cfg  db_port)"
 db_name="$(read ./config.cfg db_name)"
 db_user="$(read ./config.cfg  db_user)"
 db_password="$(read ./config.cfg  db_password)"
+use_stable_versions="$(read ./config.cfg use_stable_versions)"
 
 if ! [[ $frontend_port ]]; then
     echo "Config for frontend_port not found, using defaults."
-    frontend_port="$(read ./config.cfg frontend_port)"
+    frontend_port="$(read ./config.cfg.defaults frontend_port)"
 fi
 
 if ! [[ $rest_port ]]; then
     echo "Config for rest_port not found, using defaults."
-    rest_port="$(read ./config.cfg rest_port)"
+    rest_port="$(read ./config.cfg.defaults rest_port)"
 fi
 
 if ! [[ $db_port ]]; then
     echo "Config for db_port not found, using defaults."
-    db_port="$(read ./config.cfg db_port)"
+    db_port="$(read ./config.cfg.defaults db_port)"
 fi
 
 if ! [[ $db_name ]]; then
     echo "Config for db_name not found, using defaults."
-    db_name="$(read ./config.cfg db_name)"
+    db_name="$(read ./config.cfg.defaults db_name)"
 fi
 
 if ! [[ $db_user ]]; then
     echo "Config for db_user not found, using defaults."
-    db_user="$(read ./config.cfg db_user)"
+    db_user="$(read ./config.cfg.defaults db_user)"
 fi
 
 if ! [[ $db_password ]]; then
     echo "Config for db_password not found, using defaults."
-    db_password="$(read ./config.cfg db_password)"
+    db_password="$(read ./config.cfg.defaults db_password)"
+fi
+
+if ! [[ $use_stable_versions ]]; then
+    echo "Config for use_stable_versions not found, using defaults."
+    use_stable_versions="$(read ./config.cfg.defaults use_stable_versions)"
 fi
 
 # Check if (default) password was empty.
@@ -70,6 +81,15 @@ if ! [[ $db_password ]]; then
   echo "Creating new random password for the database."
   db_password="asdasdasd"
   write $configFilePath db_password $db_password
+fi
+
+# Check versions config
+if [[ $use_stable_versions == "true" ]]; then
+  echo "Installing stable versions."
+  frontendVersion="$(getTagsByName filefighter/frontend v | tail -1)"
+  restVersion="$(getTagsByName filefighter/rest v | tail -1)"
+else
+  echo "Installing latest versions. Be aware that minor bugs could occur. Please report found bugs: filefigther@t-online.de."
 fi
 
 # Finished Config:
@@ -90,7 +110,7 @@ echo "Creating necessary network."
 docker network create $networkname >/dev/null 2>&1
 
 # Database
-echo "Creating DB Container."
+echo "Creating DB Container, with tag: latest."
 docker create \
 -e MONGO_INITDB=$db_name \
 -e MONGO_INITDB_ROOT_USERNAME=$db_user \
@@ -102,7 +122,7 @@ docker start $dbname >/dev/null 2>&1
 sleep 3 # waiting 3 seconds for mongo to start.
 
 # REST APP
-echo "Creating REST Container."
+echo "Creating REST Container, with tag: $restVersion."
 docker create \
 -e DB_USERNAME=$db_user \
 -e DB_PASSWORD=$db_password \
@@ -111,15 +131,15 @@ docker create \
 -e SPRING_PROFILES_ACTIVE="prod" \
 -p $rest_port:8080 \
 --network $networkname \
---name $restname filefighter/rest:latest >/dev/null 2>&1
+--name $restname filefighter/rest:$restVersion >/dev/null 2>&1
 docker start $restname >/dev/null 2>&1
 
 # Frontend
-echo "Creating Frontend Container."
+echo "Creating Frontend Container, with tag: $frontendVersion."
 docker create \
 -e REST_PORT=$rest_port \
  -p $frontend_port:5000 \
---name $frontendname filefighter/frontend:0.0.1 >/dev/null 2>&1
+--name $frontendname filefighter/frontend:$frontendVersion >/dev/null 2>&1
 docker start $frontendname >/dev/null 2>&1
 
 # DataHandler
