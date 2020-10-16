@@ -22,7 +22,7 @@ restVersion="latest" #$(getTagsByName filefighter/rest v | tail -1)"
 # Startup Message.
 echo ""
 echo "-------------------------< FileFighter >--------------------------"
-echo "|             Version 0.0.1. Last updated at 14.10.20            |"
+echo "|              Version 1.0 Last updated at 14.10.20              |"
 echo "|         Developed by Gimleux, Valentin, Open-Schnick.          |"
 echo "|       Development Blog: https://filefighter.github.io          |"
 echo "|  The code can be found at: https://www.github.com/filefighter  |"
