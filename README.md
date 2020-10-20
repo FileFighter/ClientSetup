@@ -17,7 +17,7 @@ The containers use the resources of the host machine, depending on the load.
 Advantages are security and the possibility to easily shutdown and update the services. See more under [Usage](#Usage).
 
 #### Docker
-First check whether you have docker already installed.  
+First check whether you have Docker already installed.  
 To do that run:  
 ```shell script
 docker -v
@@ -37,10 +37,10 @@ To install Docker with [snap](https://www.howtogeek.com/660193/how-to-work-with-
 sudo snap install docker
 ```
 ##### Install with Apt
-Installing with [apt](https://en.wikipedia.org/wiki/APT_(software)) is a bit more difficult you can read [here](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04) more about it.
+Installing with [apt](https://en.wikipedia.org/wiki/APT_(software)) is a bit more difficult you can read [here](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-Docker-on-ubuntu-20-04) more about it.
 
 ## Usage
-After successfully installing docker you can start using FileFighter.  
+After successfully installing Docker you can start using FileFighter.  
 This Repository contains one <!-- three --> important script:
 * The [initial start](./init_setup.sh) script starts downloads all the application and starts them in different containers. Run it with 
 ```shell script
