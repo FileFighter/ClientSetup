@@ -147,5 +147,5 @@ docker start $frontendname >/dev/null 2>&1
 
 echo ""
 echo "Finished Building FileFighter."
-echo "Hosting Frontend at: http://localhost:$frontend_port/"
+echo "Hosting Frontend at: http://localhost:$frontend_port"
 echo ""
