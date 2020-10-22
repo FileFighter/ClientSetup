@@ -10,7 +10,7 @@ For windows systems you could use [wsl](https://en.wikipedia.org/wiki/Windows_Su
 
 ### Dependencies
 One of the of goals of FileFighter is, that the client, that's you, only needs to met only one single dependency.  
-You need **Docker**.    
+You need [Docker](https://www.docker.com/).    
 Docker is a way to organise and run multiple applications. You can imagine it like a virtual machine (technical it`s a bit different), with a small file- and operating system within your machine.
 Sounds more scary than it actually is. Different Applications run in different containers, these only contain the necessary software to run the application.  
 The containers use the resources of the host machine, depending on the load.  
