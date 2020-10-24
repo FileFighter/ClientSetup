@@ -90,6 +90,9 @@ if [[ $use_stable_versions == "true" ]]; then
   restVersion="$(getTagsByName filefighter/rest v | tail -1)"
 else
   echo "Installing latest versions. Be aware that minor bugs could occur. Please report found bugs: filefigther@t-online.de."
+  docker rmi filefighter/rest:latest >/dev/null 2>&1
+  docker rmi filefighter/frontend:latest >/dev/null 2>&1
+  docker rmi mongo >/dev/null 2>&1
 fi
 
 # Finished Config:
@@ -111,6 +114,7 @@ docker network create $networkname >/dev/null 2>&1
 
 # Database
 echo "Creating DB Container, with tag: latest."
+echo "Downloading mongodb image."
 docker create \
 -e MONGO_INITDB=$db_name \
 -e MONGO_INITDB_ROOT_USERNAME=$db_user \
@@ -119,10 +123,12 @@ docker create \
 --name $dbname mongo:latest >/dev/null 2>&1
 docker start $dbname >/dev/null 2>&1
 
-sleep 3 # waiting 3 seconds for mongo to start.
+echo "Finished downloading."
+echo ""
 
 # REST APP
 echo "Creating REST Container, with tag: $restVersion."
+echo "Downloading filefighter/rest image."
 docker create \
 -e DB_USERNAME=$db_user \
 -e DB_PASSWORD=$db_password \
@@ -134,16 +140,21 @@ docker create \
 --name $restname filefighter/rest:$restVersion >/dev/null 2>&1
 docker start $restname >/dev/null 2>&1
 
+echo "Finished downloading."
+echo ""
+
 # Frontend
 echo "Creating Frontend Container, with tag: $frontendVersion."
+echo "Downloading filefighter/frontend image."
 docker create \
 -e REST_PORT=$rest_port \
  -p $frontend_port:5000 \
 --name $frontendname filefighter/frontend:$frontendVersion >/dev/null 2>&1
 docker start $frontendname >/dev/null 2>&1
 
-# DataHandler
+echo "Finished downloading."
 
+# DataHandler
 
 echo ""
 echo "Finished Building FileFighter."
