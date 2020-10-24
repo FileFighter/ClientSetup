@@ -6,7 +6,7 @@ Setup Scripts for clients to download.
 
 ### Operating Systems
 Currently, we support only Unix-like operating systems like [Ubuntu](https://ubuntu.com). MacOs is still on our roadmap.  
-For windows systems you could use [wsl](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux) to set that up read more [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
+For windows systems you could use [wsl](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux). To set that up read more [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
 ### Dependencies
 One of the of goals of FileFighter is, that the client, that's you, only needs to met only one single dependency.  
