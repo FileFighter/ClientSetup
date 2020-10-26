@@ -45,7 +45,7 @@ Just download this repository as a zipfile [here](https://github.com/FileFighter
 This repository contains one <!-- three --> important script:   
 The [initial start](./init_setup.sh) script starts downloading all the services and starts them in different containers. Run it with 
 ```shell script
-./init_setup
+sudo ./init_setup
 ```
 After starting the script you should see something like the following:
 ```shell script
