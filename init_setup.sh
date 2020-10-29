@@ -34,10 +34,9 @@ echo "       The code can be found at: https://www.github.com/filefighter    "
 echo ""
 echo "-----------------------< Started First Setup >-------------------------"
 echo ""
-echo "Docker prequesites matched. Docker instance running."
+echo "Docker prerequisites matched. Docker instance running."
 echo "Reading in config file from: $configFilePath."
 
-exit 0;
 # Read in default keys.
 frontend_port="$(read ./config.cfg frontend_port)";
 rest_port="$(read ./config.cfg  rest_port)"
