@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+# changing directory to be able to use relative paths.
+starting_working_directory=$(pwd)
+rootDir="/home/open-schnick/Documents/projects/filefighter/ClientSetup/" # how do we get that?
+cd $rootDir
+
+source lib/utils.sh
+source lib/remove.sh
+source lib/install.sh
+source lib/start.sh
+source lib/stop.sh
+
+version="v1.3"
+date="05.11.20"
+
+if [ -z "$1" ]; then
+  echo "FileFighter Application $version."
+  echo ""
+  printUsage
+  exit 1
+fi
+
+if [[ $1 == "install" ]]; then
+  echoLogo $version $date "Installing FileFighter"
+  ffinstall
+  exit 0
+fi
+
+if [[ $1 == "start" ]]; then
+  echoLogo $version $date "Starting FileFighter"
+  ffstart
+  exit 0
+fi
+
+if [[ $1 == "stop" ]]; then
+  echoLogo $version $date "Stopping FileFighter"
+  ffstop
+  exit 0
+fi
+
+if [[ $1 == "remove" ]]; then
+  echoLogo $version $date "Removing FileFighter"
+  ffremove
+  exit 0
+fi
+
+echo "FileFighter Application $version."
+echo ""
+echo "Command could not be found."
+
+printUsage
+
+cd $oldwd
+exit 1

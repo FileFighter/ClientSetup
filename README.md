@@ -43,7 +43,7 @@ Installing with [apt](https://en.wikipedia.org/wiki/APT_(software)) is a bit mor
 After successfully installing Docker you can start using FileFighter.  
 Just download this repository as a zipfile [here](https://github.com/FileFighter/ClientSetup/releases/).  
 This repository contains one <!-- three --> important script:   
-The [initial start](./init_setup.sh) script starts downloading all the services and starts them in different containers. Run it with 
+The [initial start](lib/install.sh) script starts downloading all the services and starts them in different containers. Run it with 
 ```shell script
 sudo ./init_setup
 ```
