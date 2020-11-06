@@ -147,6 +147,6 @@ ffinstall() {
 
   echo ""
   echo "Finished Building FileFighter."
-  echo "Start FileFighter with 'ffighter start'"
+  echo "Start FileFighter with 'ffighter start'."
   echo ""
 }

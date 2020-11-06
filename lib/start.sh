@@ -20,6 +20,6 @@ ffstart() {
   docker start $dbname
 
   echo "Finished starting FileFighter services."
-  echo "You can stop them again with 'ffighter stop"
+  echo "You can stop them again with 'ffighter stop'."
   echo ""
 }
