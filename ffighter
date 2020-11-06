@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 # changing directory to be able to use relative paths.
-starting_working_directory=$(pwd)
-rootDir="/home/open-schnick/Documents/projects/filefighter/ClientSetup/" # how do we get that?
+rootDir=`dirname $0`
 cd $rootDir
 
+# Import necessary functions.
 source lib/utils.sh
 source lib/remove.sh
 source lib/install.sh
@@ -45,11 +45,10 @@ if [[ $1 == "remove" ]]; then
   exit 0
 fi
 
-echo "FileFighter Application $version."
+echo "FileFighter Application $version"
 echo ""
 echo "Command could not be found."
 
 printUsage
 
-cd $oldwd
 exit 1

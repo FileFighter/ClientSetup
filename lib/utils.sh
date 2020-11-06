@@ -18,7 +18,7 @@ printUsage() {
   echo "usage: ffighter <args>"
   echo ""
   echo "  install   - install the FileFighter application."
-  echo "  start   - start the services"
-  echo "  stop   - stop the services"
-  echo "  remove  - remove all services"
+  echo "  start     - start the services"
+  echo "  stop      - stop the services"
+  echo "  remove    - remove all services"
 }
