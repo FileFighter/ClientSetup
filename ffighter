@@ -15,8 +15,7 @@ version="v1.3"
 date="05.11.20"
 
 if [ -z "$1" ]; then
-  echo "FileFighter Application $version."
-  echo ""
+  echoLogo $version $date "Show Usage"
   printUsage
   exit 1
 fi
