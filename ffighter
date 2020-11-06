@@ -10,6 +10,7 @@ source lib/remove.sh
 source lib/install.sh
 source lib/start.sh
 source lib/stop.sh
+source lib/status.sh
 
 version="v1.3"
 date="05.11.20"
@@ -18,6 +19,12 @@ if [ -z "$1" ]; then
   echoLogo $version $date "Show Usage"
   printUsage
   exit 1
+fi
+
+if [[ $1 == "status" ]]; then
+  echoLogo $version $date "Show Status"
+  ffstatus
+  exit 0
 fi
 
 if [[ $1 == "install" ]]; then

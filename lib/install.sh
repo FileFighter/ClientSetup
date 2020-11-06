@@ -91,7 +91,7 @@ ffinstall() {
   echo "Finished reading config. Building containers..."
 
   # Check for already existing CONTAINERS.
-  if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps --format "{{.Names}}" | grep $dbname) ]]; then
+  if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]]; then
     echo ""
     echo "A container with already exists with the name $restname or $frontendname or $dbname."
     echo "Maybe its the second time that you run this script. If not please remove these containers."
