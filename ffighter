@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # changing directory to be able to use relative paths.
-rootDir=`dirname $0`
+rootDir=$(dirname $0)
 cd $rootDir
 
 # Import necessary functions.
@@ -51,10 +51,6 @@ if [[ $1 == "remove" ]]; then
   exit 0
 fi
 
-echo "FileFighter Application $version"
-echo ""
-echo "Command could not be found."
-
+echoLogo $version $date "Show Usage"
 printUsage
-
 exit 1
