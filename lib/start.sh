@@ -7,6 +7,9 @@ ffstart() {
     exit 1
   fi
 
+  source ./lib/config.sh # load the config library functions
+  frontendport=$(read config.cfg frontend_port)
+
   # setup variables
   restname="FileFighterREST"
   frontendname="FileFighterFrontend"
@@ -19,7 +22,9 @@ ffstart() {
   docker start $frontendname
   docker start $dbname
 
+  echo ""
   echo "Finished starting FileFighter services."
+  echo "Frontend is running here: http://localhost:$frontendport."
   echo "You can stop them again with 'ffighter stop'."
   echo ""
 }
