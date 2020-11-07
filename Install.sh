@@ -2,7 +2,8 @@
 # TODO: update readme.
 
 # Read in base dir for Path.
-rootDir=$(dirname $0)
+rootDir=$(realpath $0)
+rootDir=${rootDir/%Install.sh} # Very HACKY YES.
 newPATH="PATH=$PATH:$rootDir"
 
 # Add main script to PATH.
