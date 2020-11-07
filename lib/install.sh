@@ -94,6 +94,7 @@ ffinstall() {
     exit 1
   fi
 
+  echo ""
   # Network
   echo "Creating necessary network."
   docker network create $networkname >/dev/null 2>&1
