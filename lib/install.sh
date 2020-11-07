@@ -26,7 +26,6 @@ ffinstall() {
   # Read in default keys.
   frontend_port="$(read $configFilePath frontend_port)"
   rest_port="$(read $configFilePath rest_port)"
-  db_port="$(read $configFilePath db_port)"
   db_name="$(read $configFilePath db_name)"
   db_user="$(read $configFilePath db_user)"
   db_password="$(read $configFilePath db_password)"
@@ -40,11 +39,6 @@ ffinstall() {
   if ! [[ $rest_port ]]; then
     echo "Config for rest_port not found, using defaults."
     rest_port="$(read config.cfg.defaults rest_port)"
-  fi
-
-  if ! [[ $db_port ]]; then
-    echo "Config for db_port not found, using defaults."
-    db_port="$(read config.cfg.defaults db_port)"
   fi
 
   if ! [[ $db_name ]]; then
