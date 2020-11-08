@@ -13,7 +13,7 @@ source lib/stop.sh
 source lib/status.sh
 
 version="v1.3"
-date="05.11.20"
+date="08.11.20"
 
 if [ -z "$1" ]; then
   echoLogo $version $date "Show Usage"
