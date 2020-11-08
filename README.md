@@ -91,7 +91,7 @@ You can see all the available options to run with *ffighter*.
 
 | Option      | Description |
 | :----:   |  :----:  |
-| status | This command shows you information about the status of the application, like install status, whether its running or not etc... | 
+| status | This command shows you information about the status of the application, like installation status, whether its running or not etc... | 
 | install | Download and create all necessary services. |
 | start | Start the services if already downloaded. |
 | stop | Stop the services if running. |
