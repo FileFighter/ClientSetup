@@ -9,7 +9,7 @@ Currently, we support only Unix-like operating systems like [Ubuntu](https://ubu
 For windows systems you could use [wsl](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux). To set that up read more [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
 ### Dependencies
-One of the of goals of FileFighter is, that the client, that's you, only needs to met only one single dependency.  
+One of the of goals of FileFighter is, that the client, that's you, only needs to met one single dependency.  
 You need [Docker](https://www.docker.com/).    
 Docker is a way to organise and run multiple applications. You can imagine it like a virtual machine (technical it`s a bit different), with a small file- and operating system within your machine.
 Sounds more scary than it actually is. Different Applications run in different containers, these only contain the necessary software to run the application.  
@@ -39,27 +39,76 @@ sudo snap install docker
 ##### Install with Apt
 Installing with [apt](https://en.wikipedia.org/wiki/APT_(software)) is a bit more difficult you can read [here](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-Docker-on-ubuntu-20-04) more about it.
 
-## Usage
+## Installing FileFighter
 After successfully installing Docker you can start using FileFighter.  
 Just download this repository as a zipfile [here](https://github.com/FileFighter/ClientSetup/releases/).  
-This repository contains one <!-- three --> important script:   
-The [initial start](./init_setup.sh) script starts downloading all the services and starts them in different containers. Run it with 
+This repository contains the *Install.sh* installation script.  
+ ```shell script
+ dev@filefighter:~/Downloads/FileFighter-1.3 $ ls
+ config.cfg  ffighter  Install.sh  lib  README.md
+ ```  
+You can execute the script:
 ```shell script
-sudo ./init_setup
+dev@filefighter:~/Downloads/FileFighter-1.3 $ ./Install.sh
 ```
-After starting the script you should see something like the following:
+And you should see something like that:
 ```shell script
--------------------------< FileFighter >--------------------------
-|              Version 1.0 Last updated at 14.10.20              |
-|         Developed by Gimleux, Valentin, Open-Schnick.          |
-|       Development Blog: https://filefighter.github.io          |
-|  The code can be found at: https://www.github.com/filefighter  |
---------------------< Started Initial Setup >---------------------
+dev@filefighter:~/Downloads/FileFighter-1.3 $ ./Install.sh 
+Adding FileFighter Application to PATH...
+Adding FileFighter Application to PATH was successful.
+Please run the following command to finish the installation.
+
+source /home/dev/.bashrc
+```
+Running this command will add the FileFighter Application to your System.
+## Running FileFighter
+You can use the FileFighter Application with the command *ffighter*  
+Running this command should show you something like that:
+```shell script
+dev@filefighter:~/Downloads/FileFighter-1.3 $ ffighter
+  _____   _   _          _____   _           _       _                 
+ |  ___| (_) | |   ___  |  ___| (_)   __ _  | |__   | |_    ___   _ __ 
+ | |_    | | | |  / _ \ | |_    | |  / _` | | '_ \  | __|  / _ \ | '__|
+ |  _|   | | | | |  __/ |  _|   | | | (_| | | | | | | |_  |  __/ | |   
+ |_|     |_| |_|  \___| |_|     |_|  \__, | |_| |_|  \__|  \___| |_|   
+                                     |___/                             
+                   Version v1.3 Last updated: 08.11.20
+              Developed by Gimleux, Valentin, Open-Schnick.            
+             Development Blog: https://filefighter.github.io           
+       The code can be found at: https://www.github.com/filefighter    
+
+-------------------------< Show Usage >---------------------------
+
+usage: ffighter <args>
+
+  status    - show status of the FileFighter application.
+  install   - install the FileFighter application.
+  start     - start the services.
+  stop      - stop the services.
+  remove    - remove all services.
+```
+You can see all the available options to run with *ffighter*.  
+
+| Option      | Description |
+| :----:   |  :----:  |
+| status | This command shows you information about the status of the application, like installation status, whether its running or not etc... | 
+| install | Download and create all necessary services. |
+| start | Start the services if already downloaded. |
+| stop | Stop the services if running. |
+| remove | Remove all services. |
+
+To start the Application just run:
+```shell script
+ffighter install
+```
+And after that 
+```shell script
+ffighter start
 ```
 After the script succeeds you should be able to see the FileFighter application in your browser.  
 Depending on your configuration file (see below), you should see the application after running the script [here](http://localhost:80/).  
-You should see a login page. For the first setup you can use the credentials 
-`username=admin password=admin`
+You should see a login page. For the first setup you can use the credentials.
+`username=admin` and `password=admin`
 To be sure everything is setup correctly click [here](http://localhost:80/health). If everything is green you are good to go.
 
 ### Configuration
@@ -72,7 +121,6 @@ Valid keys to configure how FileFighter behaves are listed here:
 | frontend_port | 0-65535  | 80 | The port of the webapp (frontend) service. You can visit the FileFighter application over this port. |
 | db_user | any string | root | The name of the Database running in the background. |
 | db_password | any string | none (see below) | The password of the database. (The database won't be exposed to the internet, but passwords never hurt.) |
-| db_port | 0-65535 | 27017  | The port of the database.  |
 | db_name | any string | filefighter | The name of the database. |
 | use_stable_versions | true / false | true | When set to true the latest stable versions will be used. When set to false always the latest (possible unstable) versions will be used. |
 
@@ -83,7 +131,7 @@ If the `db_password` key is empty, a random password will be generated.
 Be carefully as the developers of FileFighter won't take responsibility when you are using the application or configuration options wrong or in a not intended way.
 
 ## Remaining Files
-All the remaining not explicitly explained files are important for the scripts to work.
+All the remaining not explicitly explained files are important for the scripts to work and should not be changed manually.
 
 ## Help
 For further help, feedback or questions write us an [email](mailto:filefighter@t-online.de).
