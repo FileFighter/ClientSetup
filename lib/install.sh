@@ -15,6 +15,7 @@ ffinstall() {
   frontendname="FileFighterFrontend"
   dbname="FileFighterDB"
   networkname="FileFighterNetwork"
+  reverseproxyname="FileFighterReverseProxy"
 
   # latest stable versions.
   frontendVersion="latest"
@@ -134,11 +135,22 @@ ffinstall() {
   docker create \
     -e REST_PORT=$rest_port \
     -p $frontend_port:5000 \
+    --network $networkname \
     --name $frontendname filefighter/frontend:$frontendVersion >/dev/null 2>&1
 
   echo "Finished downloading."
 
+
   # DataHandler
+
+  # ReverseProxy
+  docker build -t reverseproxy:1.0.0 $(pwd)/.
+
+  docker create \
+   --name=$reverseproxyname \
+   --network $networkname \
+    -p 8082:80 \
+    reverseproxy:1.0.0
 
   echo ""
   echo "Finished Building FileFighter."

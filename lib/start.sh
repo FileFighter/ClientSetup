@@ -14,6 +14,7 @@ ffstart() {
   restname="FileFighterREST"
   frontendname="FileFighterFrontend"
   dbname="FileFighterDB"
+  reverseproxyname="FileFighterReverseProxy"
 
   if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]]; then
     echo "Docker prerequisites matched. Docker instance running."
@@ -22,6 +23,7 @@ ffstart() {
     docker start $restname
     docker start $frontendname
     docker start $dbname
+    docker start $reverseproxyname
 
     echo ""
     echo "Finished starting FileFighter services."

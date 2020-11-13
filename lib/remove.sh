@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+f#!/usr/bin/env bash
 ffremove() {
   restname="FileFighterREST"
   frontendname="FileFighterFrontend"
