@@ -3,6 +3,8 @@
 # Services
 rest_port=8080
 frontend_port=5000
+app_port=80
+
 
 # DB Settings
 db_user=root
