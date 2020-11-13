@@ -25,8 +25,7 @@ ffinstall() {
   echo "Reading in config file from: $configFilePath."
 
   # Read in default keys.
-  frontend_port="$(read $configFilePath frontend_port)"
-  rest_port="$(read $configFilePath rest_port)"
+  app_port="$(read $configFilePath app_port)"
   db_name="$(read $configFilePath db_name)"
   db_user="$(read $configFilePath db_user)"
   db_password="$(read $configFilePath db_password)"
@@ -66,7 +65,7 @@ ffinstall() {
   if ! [[ $db_password ]]; then
     # Create new Password
     echo "Creating new random password for the database."
-    db_password=$(wget -qO- "https://www.passwordrandom.com/query?command=password&scheme=rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+    db_password=$(wget -qO- "https://www.passwordrandom.com/query?command=password&scheme=rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
     write $configFilePath db_password $db_password
   fi
 
@@ -134,7 +133,6 @@ ffinstall() {
   echo "Downloading filefighter/frontend image."
   docker create \
     -e REST_PORT=$rest_port \
-    -p $frontend_port:5000 \
     --network $networkname \
     --name $frontendname filefighter/frontend:$frontendVersion >/dev/null 2>&1
 
@@ -144,13 +142,11 @@ ffinstall() {
   # DataHandler
 
   # ReverseProxy
-  docker build -t reverseproxy:1.0.0 $(pwd)/.
-
   docker create \
-   --name=$reverseproxyname \
-   --network $networkname \
-    -p 8082:80 \
-    reverseproxy:1.0.0
+    --network $networkname \
+    -p $app_port:80 \
+    --name=$reverseproxyname \
+    filefighter/reverseproxy:1.0.0
 
   echo ""
   echo "Finished Building FileFighter."

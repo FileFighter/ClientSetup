@@ -1,5 +1,5 @@
 # dockerfile
-FROM nginx:1.16.0-alpine
+FROM nginx
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80

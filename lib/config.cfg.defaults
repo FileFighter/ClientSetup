@@ -2,7 +2,7 @@
 
 # Services
 rest_port=8080
-frontend_port=80
+frontend_port=5000
 
 # DB Settings
 db_user=root
