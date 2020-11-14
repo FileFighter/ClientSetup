@@ -131,7 +131,7 @@ ffinstall() {
   echo ""
 
   # ReverseProxy
-  echo "Creating ReverseProxy Container with tag: $proxyVersion"
+  echo "Creating ReverseProxy Container with tag: $proxyVersion."
   echo "Downloading filefighter/reverseproxy image."
   docker create \
     --network $networkname \
