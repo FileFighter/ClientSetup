@@ -11,6 +11,7 @@ ffremove() {
     docker container stop $dbname && docker container rm $dbname
     docker container stop $reverseproxyname && docker container rm $reverseproxyname
 
+    echo ""
     echo "Removed FileFighter Application. Install it again with 'ffighter install'."
     exit 0
   fi
