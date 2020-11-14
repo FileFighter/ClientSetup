@@ -1,31 +1,27 @@
 #!/usr/bin/env bash
 
 ffstart() {
-  # Check if docker is running
-  if ! docker info >/dev/null 2>&1; then
-    echo "Docker is not running, install it first or retry."
-    exit 1
-  fi
-
   source ./lib/config.sh # load the config library functions
-  frontendport=$(read config.cfg frontend_port)
+  appport=$(read config.cfg app_port)
 
   # setup variables
   restname="FileFighterREST"
   frontendname="FileFighterFrontend"
   dbname="FileFighterDB"
+  reverseproxyname="FileFighterReverseProxy"
 
-  if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]]; then
+  if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $reverseproxyname) ]]; then
     echo "Docker prerequisites matched. Docker instance running."
     echo "Starting services..."
 
     docker start $restname
     docker start $frontendname
     docker start $dbname
+    docker start $reverseproxyname
 
     echo ""
     echo "Finished starting FileFighter services."
-    echo "Frontend is running here: http://localhost:$frontendport."
+    echo "Frontend is running here: http://localhost:$appport."
     echo "You can stop them again with 'ffighter stop'."
     echo ""
     exit 0

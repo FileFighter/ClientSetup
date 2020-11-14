@@ -15,6 +15,12 @@ source lib/status.sh
 version="v1.3"
 date="08.11.20"
 
+# Check if docker is running
+if ! docker info >/dev/null 2>&1; then
+  echo "Docker is not running, install it first or retry."
+  exit 1
+fi
+
 if [ -z "$1" ]; then
   echoLogo $version $date "Show Usage"
   printUsage

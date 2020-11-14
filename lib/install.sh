@@ -3,42 +3,33 @@ ffinstall() {
   source lib/config.sh     # load the config library functions
   source lib/dockertags.sh # load docker functions.
 
-  # Check if docker is running
-  if ! docker info >/dev/null 2>&1; then
-    echo "Docker is not running, install it first or retry."
-    exit 1
-  fi
-
   # setup variables
   configFilePath=$(pwd)/config.cfg
   restname="FileFighterREST"
   frontendname="FileFighterFrontend"
   dbname="FileFighterDB"
   networkname="FileFighterNetwork"
+  reverseproxyname="FileFighterReverseProxy"
 
   # latest stable versions.
   frontendVersion="latest"
   restVersion="latest"
+  proxyVersion="$(getTagsByName filefighter/reverseproxy | tail -1)"
+
 
   echo "Docker prerequisites matched. Docker instance running."
   echo "Reading in config file from: $configFilePath."
 
   # Read in default keys.
-  frontend_port="$(read $configFilePath frontend_port)"
-  rest_port="$(read $configFilePath rest_port)"
+  app_port="$(read $configFilePath app_port)"
   db_name="$(read $configFilePath db_name)"
   db_user="$(read $configFilePath db_user)"
   db_password="$(read $configFilePath db_password)"
   use_stable_versions="$(read $configFilePath use_stable_versions)"
 
-  if ! [[ $frontend_port ]]; then
-    echo "Config for frontend_port not found, using defaults."
-    frontend_port="$(read ./lib/config.cfg.defaults frontend_port)"
-  fi
-
-  if ! [[ $rest_port ]]; then
-    echo "Config for rest_port not found, using defaults."
-    rest_port="$(read config.cfg.defaults rest_port)"
+  if ! [[ $app_port ]]; then
+    echo "Config for app_port not found, using defaults."
+    app_port="$(read ./lib/config.cfg.defaults app_port)"
   fi
 
   if ! [[ $db_name ]]; then
@@ -65,7 +56,7 @@ ffinstall() {
   if ! [[ $db_password ]]; then
     # Create new Password
     echo "Creating new random password for the database."
-    db_password=$(wget -qO- "https://www.passwordrandom.com/query?command=password&scheme=rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+    db_password=$(wget -qO- "https://www.passwordrandom.com/query?command=password&scheme=rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
     write $configFilePath db_password $db_password
   fi
 
@@ -85,7 +76,7 @@ ffinstall() {
   echo "Finished reading config. Building containers..."
 
   # Check for already existing CONTAINERS.
-  if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]]; then
+  if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $reverseproxyname) ]]; then
     echo ""
     echo "A container with already exists with the name $restname or $frontendname or $dbname."
     echo "Maybe its the second time that you run this script. If not please remove these containers."
@@ -121,7 +112,7 @@ ffinstall() {
     -e DB_NAME=$db_name \
     -e DB_CONTAINER_NAME=$dbname \
     -e SPRING_PROFILES_ACTIVE="prod" \
-    -p $rest_port:8080 \
+    --expose 8080 \
     --network $networkname \
     --name $restname filefighter/rest:$restVersion >/dev/null 2>&1
 
@@ -133,10 +124,20 @@ ffinstall() {
   echo "Downloading filefighter/frontend image."
   docker create \
     -e REST_PORT=$rest_port \
-    -p $frontend_port:5000 \
+    --network $networkname \
     --name $frontendname filefighter/frontend:$frontendVersion >/dev/null 2>&1
 
   echo "Finished downloading."
+  echo ""
+
+  # ReverseProxy
+  echo "Creating ReverseProxy Container with tag: $proxyVersion"
+  echo "Downloading filefighter/reverseproxy image."
+  docker create \
+    --network $networkname \
+    -p $app_port:80 \
+    --name=$reverseproxyname \
+    filefighter/reverseproxy:$proxyVersion >/dev/null 2>&1
 
   # DataHandler
 
