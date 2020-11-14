@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 
 ffstart() {
-  # Check if docker is running
-  if ! docker info >/dev/null 2>&1; then
-    echo "Docker is not running, install it first or retry."
-    exit 1
-  fi
-
   source ./lib/config.sh # load the config library functions
   frontendport=$(read config.cfg frontend_port)
 

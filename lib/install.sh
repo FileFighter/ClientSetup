@@ -3,12 +3,6 @@ ffinstall() {
   source lib/config.sh     # load the config library functions
   source lib/dockertags.sh # load docker functions.
 
-  # Check if docker is running
-  if ! docker info >/dev/null 2>&1; then
-    echo "Docker is not running, install it first or retry."
-    exit 1
-  fi
-
   # setup variables
   configFilePath=$(pwd)/config.cfg
   restname="FileFighterREST"
