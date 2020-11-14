@@ -1,16 +1,10 @@
 #!/usr/bin/env bash
 
-ffstop() {
-  # Check if docker is running
-  if ! docker info >/dev/null 2>&1; then
-    echo "Docker is not running, install it first or retry."
-    exit 1
-  fi
-
-  # setup variables
+ffstop() {  # setup variables
   restname="FileFighterREST"
   frontendname="FileFighterFrontend"
   dbname="FileFighterDB"
+  reverseproxyname="FileFighterReverseProxy"
 
   echo "Docker prerequisites matched. Docker instance running."
   echo "Stopping services..."
@@ -18,6 +12,7 @@ ffstop() {
   docker stop $restname
   docker stop $frontendname
   docker stop $dbname
+  docker stop $reverseproxyname
 
   echo "Finished stopping FileFighter services."
   echo "You can start them again with 'ffighter start'."

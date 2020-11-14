@@ -112,7 +112,7 @@ You should see a login page. For the first setup you can use the credentials.
 To be sure everything is setup correctly click [here](http://localhost:80/health). If everything is green you are good to go.
 
 ### Configuration
-The script uses a [config.cfg](./config.cfg) file that stores information in `key=value` format.  
+The script uses a [config.cfg](config.cfg) file that stores information in `key=value` format.  
 Valid keys to configure how FileFighter behaves are listed here:
 
 | Key      | Possible Values | Default | Description |
@@ -125,7 +125,7 @@ Valid keys to configure how FileFighter behaves are listed here:
 | use_stable_versions | true / false | true | When set to true the latest stable versions will be used. When set to false always the latest (possible unstable) versions will be used. |
 
 All of these keys use the [default values](./lib/config.cfg.defaults) if you don't overwrite those values.  
-It is also possible to have an empty [config.cfg](./config.cfg) file as the default values will be used.
+It is also possible to have an empty [config.cfg](config.cfg) file as the default values will be used.
 If the `db_password` key is empty, a random password will be generated.
 
 Be carefully as the developers of FileFighter won't take responsibility when you are using the application or configuration options wrong or in a not intended way.

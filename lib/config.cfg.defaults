@@ -1,8 +1,8 @@
 # DO NOT CHANGE OR REMOVE THIS FILE!
 
 # Services
-rest_port=8080
-frontend_port=80
+app_port=80
+
 
 # DB Settings
 db_user=root
