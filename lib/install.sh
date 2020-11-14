@@ -31,14 +31,9 @@ ffinstall() {
   db_password="$(read $configFilePath db_password)"
   use_stable_versions="$(read $configFilePath use_stable_versions)"
 
-  if ! [[ $frontend_port ]]; then
-    echo "Config for frontend_port not found, using defaults."
-    frontend_port="$(read ./lib/config.cfg.defaults frontend_port)"
-  fi
-
-  if ! [[ $rest_port ]]; then
-    echo "Config for rest_port not found, using defaults."
-    rest_port="$(read config.cfg.defaults rest_port)"
+  if ! [[ $app_port ]]; then
+    echo "Config for app_port not found, using defaults."
+    app_port="$(read ./lib/config.cfg.defaults app_port)"
   fi
 
   if ! [[ $db_name ]]; then
@@ -85,7 +80,7 @@ ffinstall() {
   echo "Finished reading config. Building containers..."
 
   # Check for already existing CONTAINERS.
-  if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]]; then
+  if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $reverseproxyname) ]]; then
     echo ""
     echo "A container with already exists with the name $restname or $frontendname or $dbname."
     echo "Maybe its the second time that you run this script. If not please remove these containers."
@@ -142,11 +137,13 @@ ffinstall() {
   # DataHandler
 
   # ReverseProxy
+  echo "Creating ReverseProxy Container"
+  echo "Downloading filefighter/reverseproxy image."
   docker create \
     --network $networkname \
     -p $app_port:80 \
     --name=$reverseproxyname \
-    filefighter/reverseproxy:1.0.0
+    filefighter/reverseproxy:1.0.0 >/dev/null 2>&1
 
   echo ""
   echo "Finished Building FileFighter."
