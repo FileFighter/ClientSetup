@@ -23,7 +23,7 @@ jobs:
           password: ${{ secrets.DOCKER_PW }}
       -
         name: Build and push Image
-          run: |
+        run: |
           VERSION=${{ github.event.inputs.tag }}
           docker build -t filefighter/reverseproxy:$VERSION ReverseProxy/
           docker push filefighter/reverseproxy:$VERSION
