@@ -126,12 +126,12 @@ ffinstall() {
     --name $frontendname filefighter/frontend:$frontendVersion >/dev/null 2>&1
 
   echo "Finished downloading."
-
+  echo ""
 
   # DataHandler
 
   # ReverseProxy
-  echo "Creating ReverseProxy Container"
+  echo "Creating ReverseProxy Container with tag: 1.0.0"
   echo "Downloading filefighter/reverseproxy image."
   docker create \
     --network $networkname \

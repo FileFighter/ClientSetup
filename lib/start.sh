@@ -2,7 +2,7 @@
 
 ffstart() {
   source ./lib/config.sh # load the config library functions
-  frontendport=$(read config.cfg frontend_port)
+  appport=$(read config.cfg app_port)
 
   # setup variables
   restname="FileFighterREST"
@@ -21,7 +21,7 @@ ffstart() {
 
     echo ""
     echo "Finished starting FileFighter services."
-    echo "Frontend is running here: http://localhost:$frontendport."
+    echo "Frontend is running here: http://localhost:$appport."
     echo "You can stop them again with 'ffighter stop'."
     echo ""
     exit 0
