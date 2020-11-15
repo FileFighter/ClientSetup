@@ -12,8 +12,8 @@ source lib/start.sh
 source lib/stop.sh
 source lib/status.sh
 
-version="v1.3"
-date="08.11.20"
+version="v1.4"
+date="15.11.20"
 
 # Check if docker is running
 if ! docker info >/dev/null 2>&1; then
