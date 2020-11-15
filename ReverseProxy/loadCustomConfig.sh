@@ -1,0 +1,1 @@
+docker cp /home/Bike2DH/ClientSetup/ReverseProxy/nginx.conf FileFighterReverseProxy:/etc/nginx/nginx.conf
