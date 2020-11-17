@@ -1,0 +1,40 @@
+version: "3.3"
+services:
+  FileFighterFrontend:
+    image: filefighter/frontend:stable
+    networks:
+      - FileFighterNetwork
+  FileFighterREST:
+    image: filefighter/rest:stable
+    environment:
+      DB_USERNAME: root
+      DB_PASSWORD: GUZFDEGFIDGSZGFZGZDGSZ
+      DB_NAME: filefighter
+      DB_CONTAINER_NAME: FileFighterDB
+      SPRING_PROFILES_ACTIVE: "prod"
+    expose:
+      - "8080"
+    depends_on:
+      - FileFighterDB
+    networks:
+      - FileFighterNetwork
+  FileFighterDB:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB: filefighter
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: GUZFDEGFIDGSZGFZGZDGSZ
+    networks:
+      - FileFighterNetwork
+  FileFighterReverseProxy:
+    image: filefighter/reverseproxy:v1.0.0
+    networks:
+      - FileFighterNetwork
+    depends_on:
+      - FileFighterFrontend
+      - FileFighterREST
+    ports:
+    - "80:80"
+networks:
+  FileFighterNetwork:
+    driver: default
