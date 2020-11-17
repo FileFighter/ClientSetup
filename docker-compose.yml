@@ -1,11 +1,11 @@
 version: "3.3"
 services:
   FileFighterFrontend:
-    image: filefighter/frontend:stable
+    image: filefighter/frontend:latest
     networks:
       - FileFighterNetwork
   FileFighterREST:
-    image: filefighter/rest:stable
+    image: filefighter/rest:latest
     environment:
       DB_USERNAME: root
       DB_PASSWORD: GUZFDEGFIDGSZGFZGZDGSZ
@@ -37,4 +37,3 @@ services:
     - "80:80"
 networks:
   FileFighterNetwork:
-    driver: default
