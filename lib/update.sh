@@ -52,7 +52,7 @@ configFilePath=$(pwd)/config.cfg
 
   # Check if (default) password was empty.
   if ! [[ $db_password ]]; then
-    echo "Password was not set, please install first."
+    echo "Password was not set, please et the password in your config $configFilePath or run 'ffigther install' again"
     exit 1
   fi
 
@@ -64,11 +64,6 @@ configFilePath=$(pwd)/config.cfg
     echo "Updating latest versions. Be aware that minor bugs could occur. Please report found bugs: filefigther@t-online.de."
     ffupdateLatest
   fi
-
-
-
-
-
 }
 
 ffupdateStable(){
@@ -92,7 +87,6 @@ if [[ "$(docker images -q filefighter/frontend:$frontendVersionRepo 2> /dev/null
 else
   echo "FileFighter Frontend is up to date"
 fi
-    
 
 if [[ "$(docker images -q filefighter/rest:$restVersionRepo 2> /dev/null)" == "" ]]; then
   echo "New version for FileFighter Rest available, downloading it"
@@ -118,10 +112,7 @@ if [[ "$(docker images -q filefighter/rest:$restVersionRepo 2> /dev/null)" == ""
 else
   echo "FileFighter FileFighter Rest is up to date"
 fi
-
-
 }
-
 
 ffupdateLatest(){
 
@@ -134,9 +125,6 @@ fi
 
 frontendDigest="$(regctl image digest --list filefighter/frontend:latest)"
 restDigest="$(regctl image digest --list filefighter/rest:latest)"
-
-
-
 
 if [[ "$( docker inspect --format='{{.RepoDigests}}' filefighter/frontend:latest 2> /dev/null)" == "[filefighter/frontend@$frontendDigest]" ]]; then
   echo "FileFighter Frontend is up to date"
@@ -156,9 +144,6 @@ else
   echo "Finished downloading. Starting the updated container..."
   docker start $frontendname
 fi
-
-
-
 
 if [[ "$( docker inspect --format='{{.RepoDigests}}' filefighter/rest:latest 2> /dev/null)" == "[filefighter/rest@$restDigest]" ]]; then
   echo "FileFighter FileFighter Rest is up to date"
@@ -183,11 +168,6 @@ docker rmi filefighter/rest:latest >/dev/null 2>&1
 
   echo "Finished downloading. Starting the updated container..."
   docker start $restname
-
   echo ""
 fi
-
-
-
 }
-

@@ -22,4 +22,5 @@ printUsage() {
   echo "  start     - start the services."
   echo "  stop      - stop the services."
   echo "  remove    - remove all services."
+  echo "  update    - update all the services that have a new version available."
 }

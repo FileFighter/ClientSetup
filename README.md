@@ -96,6 +96,7 @@ You can see all the available options to run with *ffighter*.
 | start | Start the services if already downloaded. |
 | stop | Stop the services if running. |
 | remove | Remove all services. |
+| update | Update all the services that have a new version available. |
 
 To start the Application just run:
 ```shell script
@@ -117,8 +118,7 @@ Valid keys to configure how FileFighter behaves are listed here:
 
 | Key      | Possible Values | Default | Description |
 | :----:   | :----:          |  :----: |  :----:  |
-| rest_port | 0-65535  | 8080 | The port of the restapi service that will be published for the frontend. |
-| frontend_port | 0-65535  | 80 | The port of the webapp (frontend) service. You can visit the FileFighter application over this port. |
+| app_port | 0-65535  | 80 | The port of the application. You can visit the FileFighter application over this port. |
 | db_user | any string | root | The name of the Database running in the background. |
 | db_password | any string | none (see below) | The password of the database. (The database won't be exposed to the internet, but passwords never hurt.) |
 | db_name | any string | filefighter | The name of the database. |
@@ -129,6 +129,32 @@ It is also possible to have an empty [config.cfg](config.cfg) file as the defaul
 If the `db_password` key is empty, a random password will be generated.
 
 Be carefully as the developers of FileFighter won't take responsibility when you are using the application or configuration options wrong or in a not intended way.
+
+## Updating
+To update us the update command:
+
+```shell script
+ffighter update
+```
+This will check if new versions of the different services are available and will apply the updates.
+Depending on the configuration the update will either use the current stable version (recommended) or the newest latest version (experimental).
+
+In case you are using the latest versions you will also need to install [regclient](https://github.com/regclient/regclient/releases).
+Download the right version depending on your operating system and architecture, rename it to 'regctl', make it executable and move it to a folder that is in your path variable.
+
+### Auto update
+To achieve automatic updates you can set up a cron job as described in this [article](https://ostechnix.com/a-beginners-guide-to-cron-jobs/) with the update command.
+
+## Other operation systems (Windows)
+
+If you are not able to run the shell script for the installation you can still run FileFighter using [Docker Compose](https://docs.docker.com/compose/).
+Just download the [docker-compose.yml](https://raw.githubusercontent.com/FileFighter/ClientSetup/master/docker-compose.yml) file or clone this repo and execute this command in the folder where the file is located: 
+
+```shell script
+docker-compose up
+```
+This will also start all services and make them available [here](http://localhost:80/).
+
 
 ## Remaining Files
 All the remaining not explicitly explained files are important for the scripts to work and should not be changed manually.
