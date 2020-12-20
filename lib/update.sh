@@ -1,5 +1,5 @@
 restname="FileFighterREST"
-  frontendname="FileFighterFrontend"
+frontendname="FileFighterFrontend"
 networkname="FileFighterNetwork"
 dbname="FileFighterDB"
 
@@ -47,10 +47,6 @@ configFilePath=$(pwd)/config.cfg
     db_password="$(read config.cfg.defaults db_password)"
   fi
 
-
-
-
-
   # Finished Config:
   echo "Finished reading config. starting update..."
 
@@ -66,9 +62,7 @@ configFilePath=$(pwd)/config.cfg
    ffupdateStable
   else
     echo "Updating latest versions. Be aware that minor bugs could occur. Please report found bugs: filefigther@t-online.de."
-    docker rmi filefighter/rest:latest >/dev/null 2>&1
-    docker rmi filefighter/frontend:latest >/dev/null 2>&1
-    docker rmi mongo >/dev/null 2>&1
+    ffupdateLatest
   fi
 
 
@@ -79,11 +73,8 @@ configFilePath=$(pwd)/config.cfg
 
 ffupdateStable(){
 
-
-
-
-    frontendVersionRepo="$(getTagsByName filefighter/frontend v | tail -1)"
-    restVersionRepo="$(getTagsByName filefighter/rest v | tail -1)"
+frontendVersionRepo="$(getTagsByName filefighter/frontend v | tail -1)"
+restVersionRepo="$(getTagsByName filefighter/rest v | tail -1)"
 
 if [[ "$(docker images -q filefighter/frontend:$frontendVersionRepo 2> /dev/null)" == "" ]]; then
   echo "New version for FileFighter Frontend available, downloading it"
@@ -105,7 +96,7 @@ fi
 
 if [[ "$(docker images -q filefighter/rest:$restVersionRepo 2> /dev/null)" == "" ]]; then
   echo "New version for FileFighter Rest available, downloading it"
-  docker container stop $frontendname && docker container rm $frontendname
+  docker container stop restname && docker container rm restname
 
   # REST APP
   echo "Creating REST Container, with tag: $restVersionRepo."
@@ -129,6 +120,71 @@ else
 fi
 
 
+}
+
+
+ffupdateLatest(){
+
+echo "Warning! Updating latest version, this is not recommended"
+
+if ! type "regctl" > /dev/null; then
+ echo "regctl not found! Install it from here https://github.com/regclient/regclient/releases"
+ exit 1
+fi
+
+frontendDigest="$(regctl image digest --list filefighter/frontend:latest)"
+restDigest="$(regctl image digest --list filefighter/rest:latest)"
+
+
+
+
+if [[ "$( docker inspect --format='{{.Image}}' $frontendname 2> /dev/null)" == "$frontendDigest" ]]; then
+  echo "FileFighter Frontend is up to date"
+else
+
+  echo "New version for FileFighter Frontend available, downloading it"
+  docker container stop $frontendname && docker container rm $frontendname
+
+  docker rmi filefighter/frontend:latest >/dev/null 2>&1
+  echo "Creating Frontend Container, with tag: latest."
+  echo "Downloading filefighter/frontend image."
+  docker create \
+    --network $networkname \
+    --name $frontendname filefighter/frontend:latest >/dev/null 2>&1
+
+  echo "Finished downloading. Starting the updated container..."
+  docker start $frontendname
+fi
+
+
+
+
+if [[ "$( docker inspect --format='{{.Image}}' restname 2> /dev/null)" == "$restDigest" ]]; then
+  echo "FileFighter FileFighter Rest is up to date"
+else
+   echo "New version for FileFighter Rest available, downloading it"
+  docker container stop restname && docker container rm restname
+
+  # REST APP
+  echo "Creating REST Container, with tag: $restVersionRepo."
+  echo "Downloading filefighter/rest image."
+  docker create \
+    -e DB_USERNAME=$db_user \
+    -e DB_PASSWORD=$db_password \
+    -e DB_NAME=$db_name \
+    -e DB_CONTAINER_NAME=$dbname \
+    -e SPRING_PROFILES_ACTIVE="prod" \
+    --expose 8080 \
+    --network $networkname \
+    --name $restname filefighter/rest:$restVersionRepo >/dev/null 2>&1
+
+  echo "Finished downloading. Starting the updated container..."
+  docker start $restname
+
+  echo ""
+fi
+
 
 
 }
+
