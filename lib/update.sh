@@ -96,7 +96,7 @@ fi
 
 if [[ "$(docker images -q filefighter/rest:$restVersionRepo 2> /dev/null)" == "" ]]; then
   echo "New version for FileFighter Rest available, downloading it"
-  docker container stop restname && docker container rm restname
+  docker container stop $restname && docker container rm $restname
 
   # REST APP
   echo "Creating REST Container, with tag: $restVersionRepo."
@@ -138,7 +138,7 @@ restDigest="$(regctl image digest --list filefighter/rest:latest)"
 
 
 
-if [[ "$( docker inspect --format='{{.Image}}' $frontendname 2> /dev/null)" == "$frontendDigest" ]]; then
+if [[ "$( docker inspect --format='{{.RepoDigests}}' filefighter/frontend:latest 2> /dev/null)" == "[filefighter/frontend@$frontendDigest]" ]]; then
   echo "FileFighter Frontend is up to date"
 else
 
@@ -146,6 +146,7 @@ else
   docker container stop $frontendname && docker container rm $frontendname
 
   docker rmi filefighter/frontend:latest >/dev/null 2>&1
+  docker image pull filefighter/frontend:latest@$"frontendDigest"
   echo "Creating Frontend Container, with tag: latest."
   echo "Downloading filefighter/frontend image."
   docker create \
@@ -159,14 +160,16 @@ fi
 
 
 
-if [[ "$( docker inspect --format='{{.Image}}' restname 2> /dev/null)" == "$restDigest" ]]; then
+if [[ "$( docker inspect --format='{{.RepoDigests}}' filefighter/rest:latest 2> /dev/null)" == "[filefighter/rest@$restDigest]" ]]; then
   echo "FileFighter FileFighter Rest is up to date"
 else
    echo "New version for FileFighter Rest available, downloading it"
-  docker container stop restname && docker container rm restname
+
+docker container stop $restname && docker container rm $restname
+docker rmi filefighter/rest:latest >/dev/null 2>&1
 
   # REST APP
-  echo "Creating REST Container, with tag: $restVersionRepo."
+  echo "Creating REST Container, with tag: latest."
   echo "Downloading filefighter/rest image."
   docker create \
     -e DB_USERNAME=$db_user \
@@ -176,7 +179,7 @@ else
     -e SPRING_PROFILES_ACTIVE="prod" \
     --expose 8080 \
     --network $networkname \
-    --name $restname filefighter/rest:$restVersionRepo >/dev/null 2>&1
+    --name $restname filefighter/rest:latest >/dev/null 2>&1
 
   echo "Finished downloading. Starting the updated container..."
   docker start $restname
