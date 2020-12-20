@@ -143,10 +143,10 @@ if [[ "$( docker inspect --format='{{.RepoDigests}}' filefighter/frontend:latest
 else
 
   echo "New version for FileFighter Frontend available, downloading it"
-  docker container stop $frontendname && docker container rm $frontendname
 
+  docker container stop $frontendname && docker container rm $frontendname
   docker rmi filefighter/frontend:latest >/dev/null 2>&1
-  docker image pull filefighter/frontend:latest@$"frontendDigest"
+
   echo "Creating Frontend Container, with tag: latest."
   echo "Downloading filefighter/frontend image."
   docker create \
