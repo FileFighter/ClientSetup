@@ -11,7 +11,7 @@ ffupdate(){
 if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $reverseproxyname) ]]; then
    echo "Installation is fine, starting update"
 else
-  echo "FileFighter is not installed, run #ffighter install' first"
+  echo "FileFighter is not installed, run 'ffighter install' first"
 fi
 
   source lib/config.sh     # load the config library functions
@@ -94,6 +94,10 @@ if [[ "$(docker images -q filefighter/frontend:$frontendVersionRepo 2> /dev/null
   docker create \
     --network $networkname \
     --name $frontendname filefighter/frontend:$frontendVersionRepo >/dev/null 2>&1
+
+  echo "Finished downloading. Starting the updated container..."
+  docker start $frontendname
+
 else
   echo "FileFighter Frontend is up to date"
 fi
@@ -116,7 +120,9 @@ if [[ "$(docker images -q filefighter/rest:$restVersionRepo 2> /dev/null)" == ""
     --network $networkname \
     --name $restname filefighter/rest:$restVersionRepo >/dev/null 2>&1
 
-  echo "Finished downloading."
+  echo "Finished downloading. Starting the updated container..."
+  docker start $restname
+
   echo ""
 else
   echo "FileFighter FileFighter Rest is up to date"
