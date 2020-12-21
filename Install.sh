@@ -28,7 +28,7 @@ if [ $? == 127 ]; then # command does not exist add it to path
     echo "$newPATH" >>"$rc"
     commandToRun="source $rc"
   else
-    echo "Couldn't add FileFighter Application to PATH. Please contact us at filefighter@t-online.de."
+    echo "Couldn't add FileFighter Application to PATH. Please contact us at dev@filefighter.de."
     echo "Or add following line to your PATH variable:"
     echo "$rootDir"
     exit 1

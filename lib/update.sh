@@ -6,10 +6,8 @@ dbname="FileFighterDB"
 
 ffupdate(){
 
-
-
 if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $reverseproxyname) ]]; then
-   echo "Installation is fine, starting update"
+   echo "Installation is fine, starting to read config..."
 else
   echo "FileFighter is not installed, run 'ffighter install' first"
 fi
@@ -61,7 +59,8 @@ configFilePath=$(pwd)/config.cfg
     echo "Updating stable versions."
    ffupdateStable
   else
-    echo "Updating latest versions. Be aware that minor bugs could occur. Please report found bugs: filefigther@t-online.de."
+    echo "Warning! Updating latest versions."
+    echo "Updating latest version is not recommended and might break the application. Please report found problems here: dev@filefighter.de."
     ffupdateLatest
   fi
 }
@@ -105,7 +104,7 @@ if [[ "$(docker images -q filefighter/rest:$restVersionRepo 2> /dev/null)" == ""
     --network $networkname \
     --name $restname filefighter/rest:$restVersionRepo >/dev/null 2>&1
 
-  echo "Finished downloading. Starting the updated container..."
+  echo "Finished downloading. Restarting the updated container..."
   docker start $restname
 
   echo ""
@@ -116,10 +115,10 @@ fi
 
 ffupdateLatest(){
 
-echo "Warning! Updating latest version, this is not recommended"
-
-if ! type "regctl" > /dev/null; then
+if ! type "regctl" >/dev/null 2>&1; then
+ echo ""
  echo "regctl not found! Install it from here https://github.com/regclient/regclient/releases"
+ echo ""
  exit 1
 fi
 
@@ -132,7 +131,7 @@ else
 
   echo "New version for FileFighter Frontend available, downloading it"
 
-  docker container stop $frontendname && docker container rm $frontendname
+  docker container stop $frontendname >/dev/null 2>&1 && docker container rm $frontendname >/dev/null 2>&1
   docker rmi filefighter/frontend:latest >/dev/null 2>&1
 
   echo "Creating Frontend Container, with tag: latest."
@@ -141,16 +140,16 @@ else
     --network $networkname \
     --name $frontendname filefighter/frontend:latest >/dev/null 2>&1
 
-  echo "Finished downloading. Starting the updated container..."
-  docker start $frontendname
+  echo "Finished downloading. Restarting the updated container..."
+  docker start $frontendname >/dev/null 2>&1
 fi
 
 if [[ "$( docker inspect --format='{{.RepoDigests}}' filefighter/rest:latest 2> /dev/null)" == "[filefighter/rest@$restDigest]" ]]; then
-  echo "FileFighter FileFighter Rest is up to date"
+  echo "FileFighter Rest is up to date"
 else
    echo "New version for FileFighter Rest available, downloading it"
 
-docker container stop $restname && docker container rm $restname
+docker container stop $restname >/dev/null 2>&1 && docker container rm $restname >/dev/null 2>&1
 docker rmi filefighter/rest:latest >/dev/null 2>&1
 
   # REST APP
@@ -166,8 +165,8 @@ docker rmi filefighter/rest:latest >/dev/null 2>&1
     --network $networkname \
     --name $restname filefighter/rest:latest >/dev/null 2>&1
 
-  echo "Finished downloading. Starting the updated container..."
-  docker start $restname
+  echo "Finished downloading. Restarting the updated container..."
+  docker start $restname >/dev/null 2>&1
   echo ""
 fi
 }

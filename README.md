@@ -160,4 +160,4 @@ This will also start all services and make them available [here](http://localhos
 All the remaining not explicitly explained files are important for the scripts to work and should not be changed manually.
 
 ## Help
-For further help, feedback or questions write us an [email](mailto:filefighter@t-online.de).
+For further help, feedback or questions write us an [email](mailto:dev@filefighter.de).
