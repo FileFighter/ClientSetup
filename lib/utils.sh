@@ -7,7 +7,7 @@ echoLogo() {
   echo "                                     |___/                             "
   echo "                   Version $1 Last updated: $2"
   echo "              Developed by Gimleux, Valentin, Open-Schnick.            "
-  echo "             Development Blog: https://filefighter.github.io           "
+  echo "             Development Blog: https://blog.filefighter.de           "
   echo "       The code can be found at: https://www.github.com/filefighter    "
   echo ""
   echo "-------------------------< $3 >---------------------------"
@@ -22,4 +22,5 @@ printUsage() {
   echo "  start     - start the services."
   echo "  stop      - stop the services."
   echo "  remove    - remove all services."
+  echo "  update    - update all the services that have a new version available."
 }

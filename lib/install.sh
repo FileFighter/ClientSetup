@@ -123,7 +123,6 @@ ffinstall() {
   echo "Creating Frontend Container, with tag: $frontendVersion."
   echo "Downloading filefighter/frontend image."
   docker create \
-    -e REST_PORT=$rest_port \
     --network $networkname \
     --name $frontendname filefighter/frontend:$frontendVersion >/dev/null 2>&1
 
