@@ -99,7 +99,7 @@ if [[ "$(docker images -q filefighter/rest:$restVersionRepo 2> /dev/null)" == ""
     -e DB_PASSWORD=$db_password \
     -e DB_NAME=$db_name \
     -e DB_CONTAINER_NAME=$dbname \
-    -e SPRING_PROFILES_ACTIVE="prod" \
+    -e SPRING_PROFILES_ACTIVE="stage" \
     --expose 8080 \
     --network $networkname \
     --name $restname filefighter/rest:$restVersionRepo >/dev/null 2>&1
