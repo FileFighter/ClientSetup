@@ -115,8 +115,12 @@ fi
 
 ffupdateLatest(){
 
-if ! type "regctl" >/dev/null 2>&1; then
- echo ""
+
+echo ""
+
+echo "Warning! Updating latest version, this is not recommended"
+
+if ! command -v regctl &> /dev/null; then
  echo "regctl not found! Install it from here https://github.com/regclient/regclient/releases"
  echo ""
  exit 1
