@@ -52,7 +52,7 @@ configFilePath=$(pwd)/config.cfg
 
   # Check if (default) password was empty.
   if ! [[ $db_password ]]; then
-    echo "Password was not set, please et the password in your config $configFilePath or run 'ffigther install' again"
+    echo "Password was not set, please set the password in your config ($configFilePath) or run 'ffighter install' again"
     exit 1
   fi
 
