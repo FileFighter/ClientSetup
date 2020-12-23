@@ -111,7 +111,7 @@ ffinstall() {
     -e DB_PASSWORD=$db_password \
     -e DB_NAME=$db_name \
     -e DB_CONTAINER_NAME=$dbname \
-    -e SPRING_PROFILES_ACTIVE="stage" \
+    -e SPRING_PROFILES_ACTIVE="prod" \
     --expose 8080 \
     --network $networkname \
     --name $restname filefighter/rest:$restVersion >/dev/null 2>&1
