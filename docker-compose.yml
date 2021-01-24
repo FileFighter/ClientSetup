@@ -27,7 +27,7 @@ services:
     networks:
       - FileFighterNetwork
   FileFighterReverseProxy:
-    image: filefighter/reverseproxy:v1.0.0
+    image: filefighter/reverseproxy:v1.0.2
     networks:
       - FileFighterNetwork
     depends_on:
