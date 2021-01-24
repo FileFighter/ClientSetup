@@ -70,20 +70,20 @@ It should be named like _FileFighter-v1.\*_
 Unpack the zip file, navigate into the filder and you should see this README.md, and a _Install.sh_ script.
 
 ```shell script
-dev@filefighter:~/Downloads/FileFighter-1.5 $ ls
+dev@filefighter:~/Downloads/FileFighter-1.6 $ ls
 config.cfg  ffighter  Install.sh  lib  README.md
 ```
 
 You can execute the script:
 
 ```shell script
-dev@filefighter:~/Downloads/FileFighter-1.5 $ ./Install.sh
+dev@filefighter:~/Downloads/FileFighter-1.6 $ ./Install.sh
 ```
 
 And you should see something like that:
 
 ```shell script
-dev@filefighter:~/Downloads/FileFighter-1.5 $ ./Install.sh
+dev@filefighter:~/Downloads/FileFighter-1.6 $ ./Install.sh
   _____   _   _          _____   _           _       _
  |  ___| (_) | |   ___  |  ___| (_)   __ _  | |__   | |_    ___   _ __
  | |_    | | | |  / _ \ | |_    | |  / _` | | '_ \  | __|  / _ \ | '__|
@@ -147,14 +147,14 @@ You can use the FileFighter Application with the command _ffighter_
 Running this command should show you something like that:
 
 ```shell script
-dev@filefighter:~/Downloads/FileFighter-1.5 $ ffighter
+dev@filefighter:~/Downloads/FileFighter-1.6 $ ffighter
   _____   _   _          _____   _           _       _
  |  ___| (_) | |   ___  |  ___| (_)   __ _  | |__   | |_    ___   _ __
  | |_    | | | |  / _ \ | |_    | |  / _` | | '_ \  | __|  / _ \ | '__|
  |  _|   | | | | |  __/ |  _|   | | | (_| | | | | | | |_  |  __/ | |
  |_|     |_| |_|  \___| |_|     |_|  \__, | |_| |_|  \__|  \___| |_|
                                      |___/
-                   Version v1.5 Last updated: 21.12.20
+                   Version v1.6 Last updated: 24.01.21
               Developed by Gimleux, Valentin, Open-Schnick.
              Development Blog: https://blog.filefighter.de
        The code can be found at: https://www.github.com/filefighter
