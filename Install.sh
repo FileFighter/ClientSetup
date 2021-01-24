@@ -38,4 +38,6 @@ sudo cp $DOWNLOAD_LOCATION/ffighter $APPLICATION_LOCATION
 
 echo ""
 echo "Successfully installed FileFighter!"
+echo "You can delete the downloaded files ($DOWNLOAD_LOCATION) if you want."
+echo ""
 printUsage
