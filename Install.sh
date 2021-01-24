@@ -13,7 +13,10 @@ APPLICATION_LOCATION="/usr/bin"
 DOWNLOAD_LOCATION=$(realpath $0)
 DOWNLOAD_LOCATION=${DOWNLOAD_LOCATION/%Install.sh} # Very HACKY YES.
 
-echoLogo v1.5 24.01.21 "Initial Install"
+VERSION="v1.6"
+DATE="24.01.21"
+
+echoLogo $VERSION $DATE "Initial Install"
 
 if [ ! -d $SCRIPTS_LOCATION ]; then
   echo "Creating Install Location under $SCRIPTS_LOCATION"

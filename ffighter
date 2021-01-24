@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # changing directory to be able to use relative paths.
-rootDir=$(dirname $0)
-cd $rootDir
+SCRIPTS_LOCATION="/home/$USER/filefighter"
+cd $SCRIPTS_LOCATION
 
 # Import necessary functions.
 source lib/utils.sh
@@ -13,8 +13,8 @@ source lib/stop.sh
 source lib/status.sh
 source lib/update.sh
 
-version="v1.5"
-date="21.12.20"
+VERSION="v1.6"
+DATE="24.01.21"
 
 # Check if docker is running
 if ! docker info >/dev/null 2>&1; then
@@ -23,47 +23,47 @@ if ! docker info >/dev/null 2>&1; then
 fi
 
 if [ -z "$1" ]; then
-  echoLogo $version $date "Show Usage"
+  echoLogo $VERSION $DATE "Show Usage"
   printUsage
   exit 1
 fi
 
 if [[ $1 == "status" ]]; then
-  echoLogo $version $date "Show Status"
+  echoLogo $VERSION $DATE "Show Status"
   ffstatus
   exit 0
 fi
 
 if [[ $1 == "install" ]]; then
-  echoLogo $version $date "Installing FileFighter"
+  echoLogo $VERSION $DATE "Installing FileFighter"
   ffinstall
   exit 0
 fi
 
 if [[ $1 == "start" ]]; then
-  echoLogo $version $date "Starting FileFighter"
+  echoLogo $VERSION $DATE "Starting FileFighter"
   ffstart
   exit 0
 fi
 
 if [[ $1 == "stop" ]]; then
-  echoLogo $version $date "Stopping FileFighter"
+  echoLogo $VERSION $DATE "Stopping FileFighter"
   ffstop
   exit 0
 fi
 
 if [[ $1 == "remove" ]]; then
-  echoLogo $version $date "Removing FileFighter"
+  echoLogo $VERSION $DATE "Removing FileFighter"
   ffremove
   exit 0
 fi
 
 if [[ $1 == "update" ]]; then
-  echoLogo $version $date "Updating FileFighter"
+  echoLogo $VERSION $DATE "Updating FileFighter"
   ffupdate
   exit 0
 fi
 
-echoLogo $version $date "Show Usage"
+echoLogo $VERSION $DATE "Show Usage"
 printUsage
 exit 1
