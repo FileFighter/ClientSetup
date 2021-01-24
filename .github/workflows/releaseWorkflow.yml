@@ -1,0 +1,39 @@
+name: Create new Stable Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag for new Release"
+        required: true
+        default: "v1.0"
+
+jobs:
+  filefighter-${{ github.event.input.tag }}-Artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: create release folder
+        run: mkdir filefighter-${{ github.event.input.tag }}/
+      - name: move scripts and README
+        run: |
+          TAG=${{ github.event.input.tag }}
+          mv lib filefighter-$TAG/lib
+          mv ffighter filefighter-$TAG/ffighter
+          mv Install.sh filefighter-$TAG/Install.sh
+          cp README.md filefighter-$TAG/README.md
+          mv config.cfg filefighter-$TAG/config.cfg
+      - name: create docker-compose release folder
+        run: mkdir docker-compose
+      - name: move docker-compose
+        run: |
+          mv docker-compose.yml docker-compose/docker-compose.yml
+          cp README.md docker-compose/README.md
+          echo "This would created a tag with version ${{ github.event.inputs.tag }} and zipped folders: filefighter-${{ github.event.input.tag }} docker-compose"
+      #- name: Create new release and tag.
+      #  uses: meeDamian/github-release@2.0
+      #  with:
+      #    token: ${{ secrets.GITHUB_TOKEN }}
+      #    tag: ${{ github.event.inputs.tag }}
+      #    gzip: folders
+      #    files: "filefighter-${{ github.event.input.tag }} docker-compose"
