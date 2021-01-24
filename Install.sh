@@ -18,6 +18,11 @@ DATE="24.01.21"
 
 echoLogo $VERSION $DATE "Initial Install"
 
+if [ ! -d "/home/$USER" ]; then
+  echo "Home directory for the current user not found. If you are root, switch to a user with a directory under /home/"
+  exit 1
+fi
+
 if [ ! -d $SCRIPTS_LOCATION ]; then
   echo "Creating Install Location under $SCRIPTS_LOCATION"
   mkdir $SCRIPTS_LOCATION
