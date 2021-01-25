@@ -9,7 +9,7 @@ jobs:
   Create-new-Release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: get version
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/} # pls dont ask me why it has to work like this.
