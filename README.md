@@ -17,7 +17,7 @@ You need [Docker](https://www.docker.com/).
 Docker is a way to organise and run multiple applications. You can imagine it like a virtual machine (technical it`s a bit different), with a small file- and operating system within your machine.
 Sounds more scary than it actually is. Different Applications run in different containers, these only contain the necessary software to run the application.  
 The containers use the resources of the host machine, depending on the load.  
-Advantages are security and the possibility to easily shutdown and update the services. See more under ["Running FileFighter"](#Running FileFighter).
+Advantages are security and the possibility to easily shutdown and update the services. See more under "[Running FileFighter](#Running FileFighter)".
 
 #### Docker
 
