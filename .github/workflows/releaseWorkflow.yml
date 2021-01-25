@@ -1,0 +1,38 @@
+name: Create new Stable Release
+
+on:
+  push:
+    tags:
+      - "v*.*"
+
+jobs:
+  Create-new-Release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: get version
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/} # pls dont ask me why it has to work like this.
+      - name: move scripts and README
+        run: |
+          TAG=${{ steps.vars.outputs.tag }}
+          mkdir filefighter-$TAG
+          mv lib filefighter-$TAG/lib
+          mv ffighter filefighter-$TAG/ffighter
+          mv Install.sh filefighter-$TAG/Install.sh
+          cp README.md filefighter-$TAG/README.md
+          mv config.cfg filefighter-$TAG/config.cfg
+      - name: move docker-compose
+        run: |
+          TAG=${{ steps.vars.outputs.tag }}
+          mkdir filefighter-$TAG-docker-compose
+          mv docker-compose.yml filefighter-$TAG-docker-compose/docker-compose.yml
+          cp README.md filefighter-$TAG-docker-compose/README.md
+      - name: Create new release and tag.
+        uses: meeDamian/github-release@2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.vars.outputs.tag }}
+          gzip: folders
+          allow_override: true
+          files: "filefighter-${{ steps.vars.outputs.tag }} filefighter-${{ steps.vars.outputs.tag }}-docker-compose"
