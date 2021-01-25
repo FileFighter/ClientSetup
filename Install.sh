@@ -1,44 +1,43 @@
 #!/bin/bash
-# TODO: update readme.
+
+# Source logo and usage.
+source ./lib/utils.sh
+
+# Move other files in this dir to /home/$USER/filefighter/
+SCRIPTS_LOCATION="/home/$USER/filefighter"
+
+# Move ffighter to this dir.
+APPLICATION_LOCATION="/usr/bin"
 
 # Read in base dir for Path.
-rootDir=$(realpath $0)
-rootDir=${rootDir/%Install.sh} # Very HACKY YES.
-newPATH="PATH=$PATH:$rootDir"
+DOWNLOAD_LOCATION=$(realpath $0)
+DOWNLOAD_LOCATION=${DOWNLOAD_LOCATION/%Install.sh} # Very HACKY YES.
 
-# Add main script to PATH.
-# Check files.
-profile="/home/$USER/.bash_profile"
-login="/home/$USER/.bash_login"
-rc="/home/$USER/.bashrc"
+VERSION="v1.6"
+DATE="24.01.21"
 
-commandToRun=""
-# Checking command.
-ffighter >/dev/null 2>&1
+echoLogo $VERSION $DATE "Initial Install"
 
-if [ $? == 127 ]; then # command does not exist add it to path
-  echo "Adding FileFighter Application to PATH..."
-  if [[ -f "$profile" ]]; then
-    echo "$newPATH" >>"$profile"
-    commandToRun="source $profile"
-  elif [[ -f "$login" ]]; then
-    echo "$newPATH" >>"$login"
-    commandToRun="source $login"
-  elif [[ -f "$rc" ]]; then
-    echo "$newPATH" >>"$rc"
-    commandToRun="source $rc"
-  else
-    echo "Couldn't add FileFighter Application to PATH. Please contact us at dev@filefighter.de."
-    echo "Or add following line to your PATH variable:"
-    echo "$rootDir"
-    exit 1
-  fi
-
-  echo "Adding FileFighter Application to PATH was successful."
-  echo "Please run the following command to finish the installation."
-  echo ""
-  echo $commandToRun
-else
-  echo "FileFighter Application already available"
-  echo "Use: ffighter <args>."
+if [ ! -d "/home/$USER" ]; then
+  echo "Home directory for the current user not found. If you are root, switch to a user with a directory under /home/"
+  exit 1
 fi
+
+if [ ! -d $SCRIPTS_LOCATION ]; then
+  echo "Creating Install Location under $SCRIPTS_LOCATION"
+  mkdir $SCRIPTS_LOCATION
+fi
+
+echo "Copying Scripts to new location..."
+cd $DOWNLOAD_LOCATION
+cp -r . $SCRIPTS_LOCATION
+
+echo "Copying FileFighter Application to $APPLICATION_LOCATION..."
+echo "This may need administrator rights (sudo) if you are not root."
+sudo cp $DOWNLOAD_LOCATION/ffighter $APPLICATION_LOCATION
+
+echo ""
+echo "Successfully installed FileFighter!"
+echo "You can delete the downloaded files ($DOWNLOAD_LOCATION) if you want."
+echo ""
+printUsage
