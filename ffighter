@@ -2,6 +2,14 @@
 
 # changing directory to be able to use relative paths.
 SCRIPTS_LOCATION="/home/$USER/filefighter"
+
+if [ ! -d $SCRIPTS_LOCATION ]; then
+    echo "Couldn't find scripts location under '$SCRIPTS_LOCATION'."
+    echo "Try reinstalling FileFighter"
+    exit 1
+fi
+
+
 cd $SCRIPTS_LOCATION
 
 # Import necessary functions.
