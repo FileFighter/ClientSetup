@@ -17,7 +17,7 @@ You need [Docker](https://www.docker.com/).
 Docker is a way to organise and run multiple applications. You can imagine it like a virtual machine (technical it`s a bit different), with a small file- and operating system within your machine.
 Sounds more scary than it actually is. Different Applications run in different containers, these only contain the necessary software to run the application.  
 The containers use the resources of the host machine, depending on the load.  
-Advantages are security and the possibility to easily shutdown and update the services. See more under "[Running FileFighter](#Running FileFighter)".
+Advantages are security and the possibility to easily shutdown and update the services. See more under [Running FileFighter](#Running-FileFighter).
 
 #### Docker
 
@@ -34,7 +34,7 @@ If you see something like that (your version might be different):
 Docker version 19.03.13, build 4484c46d9f
 ```
 
-You are good to go, and you can skip to ["Installing FileFighter"](#Installing FileFighter).
+You are good to go, and you can skip to [Installing FileFighter](#Installing-FileFighter).
 
 To install **Docker** on Unix you can either use [snap](https://www.howtogeek.com/660193/how-to-work-with-snap-packages-on-linux/) or [apt](<https://en.wikipedia.org/wiki/APT_(software)>) as a package manager.  
 With snap its easier but of course it's not always possible to use snap.
