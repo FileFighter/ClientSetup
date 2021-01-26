@@ -29,7 +29,8 @@ Setup Scripts for clients to install FileFighter.
 ## Operating Systems
 
 Currently, we support only Unix-like operating systems like [Ubuntu](https://ubuntu.com). MacOs is still on our roadmap.  
-For windows systems you could use [wsl](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux). To set that up read more [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
+For windows systems you could use [wsl](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux). To set that up read more [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10).  
+Alternativly you can use [docker-compose](https://docs.docker.com/compose/) to run the application. 
 
 ## Dependencies
 
@@ -75,7 +76,7 @@ Installing with [apt](<https://en.wikipedia.org/wiki/APT_(software)>) is a bit m
 # Installing FileFighter
 
 When your docker is ready to go you can install FileFighter.  
-You can install FileFighter as a commandline tool with many features, or if you are useing a non linux operating system like Windows or MacOs, with docker-compose.
+You can install FileFighter as a commandline tool with many features, or if you are using a non linux operating system like Windows or MacOs, with docker-compose.
 
 ## Installing the command line application
 
