@@ -6,6 +6,9 @@ Setup Scripts for clients to install FileFighter.
 **Table of Contents**
 - [Requirements](#requirements)
   * [Operating Systems](#operating-systems)
+    + [Linux Distributions](#linux-distributions)
+    + [mac OS](#mac-os)
+    + [Windows](#windows)
   * [Dependencies](#dependencies)
     + [Docker](#docker)
 - [Installing FileFighter](#installing-filefighter)
@@ -28,14 +31,25 @@ Setup Scripts for clients to install FileFighter.
 
 ## Operating Systems
 
-Currently, we support only Unix-like operating systems like [Ubuntu](https://ubuntu.com). MacOs is still on our roadmap.  
+### Linux Distributions
+
+We support all common Linux Distributions with `unzip`, `wget` and `curl`.  
+This code was tested under Linux Mint, Ubuntu 12, and Pop_!OS.
+
+### macOS
+
+Currently macOS is on our roadmap. You will still be able to run FileFigther with [docker-compose](https://docs.docker.com/compose/).
+
+### Windows
+
+Currently, we support only Unix-like operating systems like [Ubuntu](https://ubuntu.com). 
 For windows systems you could use [wsl](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux). To set that up read more [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10).  
 Alternativly you can use [docker-compose](https://docs.docker.com/compose/) to run the application. 
 
 ## Dependencies
 
 One of the of goals of FileFighter is, that the client, that's you, only needs to met one single dependency.  
-You need [Docker](https://www.docker.com/).  
+You need [Docker](https://www.docker.com/), or if you are using [docker-compose](https://docs.docker.com/compose/) you will need that too.  
 Docker is a way to organise and run multiple applications. You can imagine it like a virtual machine (technical it`s a bit different), with a small file- and operating system within your machine.
 Sounds more scary than it actually is. Different Applications run in different containers, these only contain the necessary software to run the application.  
 The containers use the resources of the host machine, depending on the load.  
@@ -89,7 +103,7 @@ curl https://raw.githubusercontent.com/FileFighter/ClientSetup/master/Download.s
 or you can download the necessary scripts as a zipfile [here](https://github.com/FileFighter/ClientSetup/releases/).  
 You can ignore the docker-compose.zip and download the first zip.  
 It should be named like _FileFighter-v1.\*_  
-Unpack the zip file, navigate into the filder and you should see this README.md, and a _Install.sh_ script.
+Unpack the zip file, navigate into the folder and you should see this README.md, and a _Install.sh_ script.
 
 ```shell script
 dev@filefighter:~/Downloads/FileFighter-1.6 $ ls
