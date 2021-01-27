@@ -1,25 +1,61 @@
 # FileFighter Setup
 
-Setup Scripts for clients to download.  
+Setup Scripts for clients to install FileFighter.  
 ![Release](https://img.shields.io/github/v/release/filefighter/clientsetup?color=dark-green&label=Latest%20Version&logo=github&style=for-the-badge)
 
-## Requirements
+**Table of Contents**
+- [Requirements](#requirements)
+  * [Operating Systems](#operating-systems)
+    + [Linux Distributions](#linux-distributions)
+    + [mac OS](#mac-os)
+    + [Windows](#windows)
+  * [Dependencies](#dependencies)
+    + [Docker](#docker)
+- [Installing FileFighter](#installing-filefighter)
+  * [Installing the command line application](#installing-the-command-line-application)
+  * [Installing with docker-compose](#installing-with-docker-compose)
+- [Running FileFighter](#running-filefighter)
+  * [Configuration](#configuration)
+- [Updating](#updating)
+  * [Auto update](#auto-update)
+- [Removing FileFighter](#removing-filefighter)
+  * [Remving the command line application](#remving-the-command-line-application)
+  * [Removing docker-compose version of FileFighter](#removing-docker-compose-version-of-filefighter)
+- [Troubleshooting](#troubleshooting)
+- [Remaining Files](#remaining-files)
+- [Help](#help)
 
-### Operating Systems
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
-Currently, we support only Unix-like operating systems like [Ubuntu](https://ubuntu.com). MacOs is still on our roadmap.  
-For windows systems you could use [wsl](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux). To set that up read more [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
+# Requirements
 
-### Dependencies
+## Operating Systems
+
+### Linux Distributions
+
+We support all common Linux Distributions with `unzip`, `wget` and `curl`.  
+This code was tested under Linux Mint, Ubuntu 12, and Pop_!OS.
+
+### macOS
+
+Currently macOS is on our roadmap. You will still be able to run FileFigther with [docker-compose](https://docs.docker.com/compose/).
+
+### Windows
+
+Currently, we support only Unix-like operating systems like [Ubuntu](https://ubuntu.com). 
+For windows systems you could use [wsl](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux). To set that up read more [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10).  
+Alternativly you can use [docker-compose](https://docs.docker.com/compose/) to run the application. 
+
+## Dependencies
 
 One of the of goals of FileFighter is, that the client, that's you, only needs to met one single dependency.  
-You need [Docker](https://www.docker.com/).  
+You need [Docker](https://www.docker.com/), or if you are using [docker-compose](https://docs.docker.com/compose/) you will need that too.  
 Docker is a way to organise and run multiple applications. You can imagine it like a virtual machine (technical it`s a bit different), with a small file- and operating system within your machine.
 Sounds more scary than it actually is. Different Applications run in different containers, these only contain the necessary software to run the application.  
 The containers use the resources of the host machine, depending on the load.  
-Advantages are security and the possibility to easily shutdown and update the services. See more under "[Running FileFighter](#Running FileFighter)".
+Advantages are security and the possibility to easily shutdown and update the services. See more under [Running FileFighter](#Running-FileFighter).
 
-#### Docker
+### Docker
 
 First check whether you have Docker already installed.  
 To do that run:
@@ -34,12 +70,12 @@ If you see something like that (your version might be different):
 Docker version 19.03.13, build 4484c46d9f
 ```
 
-You are good to go, and you can skip to ["Installing FileFighter"](#Installing FileFighter).
+You are good to go, and you can skip to [Installing FileFighter](#Installing-FileFighter).
 
 To install **Docker** on Unix you can either use [snap](https://www.howtogeek.com/660193/how-to-work-with-snap-packages-on-linux/) or [apt](<https://en.wikipedia.org/wiki/APT_(software)>) as a package manager.  
 With snap its easier but of course it's not always possible to use snap.
 
-##### Install with Snap
+#### Install with Snap
 
 To install Docker with [snap](https://www.howtogeek.com/660193/how-to-work-with-snap-packages-on-linux/) you can run:
 
@@ -47,16 +83,16 @@ To install Docker with [snap](https://www.howtogeek.com/660193/how-to-work-with-
 sudo snap install docker
 ```
 
-##### Install with Apt
+#### Install with Apt
 
 Installing with [apt](<https://en.wikipedia.org/wiki/APT_(software)>) is a bit more difficult you can read [here](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-Docker-on-ubuntu-20-04) more about it.
 
-## Installing FileFighter
+# Installing FileFighter
 
 When your docker is ready to go you can install FileFighter.  
-You can install FileFighter as a commandline tool with many features, or if you are useing a non linux operating system like Windows or MacOs, with docker-compose.
+You can install FileFighter as a commandline tool with many features, or if you are using a non linux operating system like Windows or MacOs, with docker-compose.
 
-### Installing the command line application
+## Installing the command line application
 
 When you are running a linux distribution you can either use this command
 
@@ -67,7 +103,7 @@ curl https://raw.githubusercontent.com/FileFighter/ClientSetup/master/Download.s
 or you can download the necessary scripts as a zipfile [here](https://github.com/FileFighter/ClientSetup/releases/).  
 You can ignore the docker-compose.zip and download the first zip.  
 It should be named like _FileFighter-v1.\*_  
-Unpack the zip file, navigate into the filder and you should see this README.md, and a _Install.sh_ script.
+Unpack the zip file, navigate into the folder and you should see this README.md, and a _Install.sh_ script.
 
 ```shell script
 dev@filefighter:~/Downloads/FileFighter-1.6 $ ls
@@ -118,7 +154,7 @@ usage: ffighter <args>
 
 Running this command will add the FileFighter Application to your System.
 
-### Installing with docker-compose
+## Installing with docker-compose
 
 Installing with docker-compose is very easy. First you need the command line tool [_docker-compose_](https://docs.docker.com/compose/install/) if it isn't already installed.  
 Then download the latest zipfile [here](https://github.com/FileFighter/ClientSetup/releases/).
@@ -141,7 +177,7 @@ docker-compose stop
 Read more about _docker-compose_ [here](https://docs.docker.com/compose/).  
 <b>Note: All steps below are only for users of the command line application.</b>
 
-## Running FileFighter
+# Running FileFighter
 
 You can use the FileFighter Application with the command _ffighter_  
 Running this command should show you something like that:
@@ -200,7 +236,7 @@ You should see a login page. For the first setup you can use the credentials.
 `username=admin` and `password=admin`
 To be sure everything is setup correctly click [here](http://localhost:80/health). If everything is green you are good to go.
 
-### Configuration
+## Configuration
 
 The script uses a [config.cfg](config.cfg) file that stores information in `key=value` format.  
 Valid keys to configure how FileFighter behaves are listed here:
@@ -219,7 +255,7 @@ If the `db_password` key is empty, a random password will be generated.
 
 Be carefully as the developers of FileFighter won't take responsibility when you are using the application or configuration options wrong or in a not intended way.
 
-## Updating
+# Updating
 
 To update us the update command:
 
@@ -233,15 +269,15 @@ Depending on the configuration the update will either use the current stable ver
 In case you are using the latest versions you will also need to install [regclient](https://github.com/regclient/regclient/releases).
 Download the right version depending on your operating system and architecture, rename it to 'regctl', make it executable and move it to a folder that is in your path variable.
 
-### Auto update
+## Auto update
 
 To achieve automatic updates you can set up a cron job as described in this [article](https://ostechnix.com/a-beginners-guide-to-cron-jobs/) with the update command.
 
 This will also start all services and make them available [here](http://localhost:80/).
 
-## Removing FileFighter
+# Removing FileFighter
 
-### Remving the command line application
+## Remving the command line application
 
 The application is installed under _/usr/bin/ffighter_.
 Remove it by typing:
@@ -258,7 +294,7 @@ rm-rf /home/YOUR_USERNAME/filefighter
 
 <b>Be aware of the fact that the default location of uploaded files and folders will also be in this directory, and thus also deleted!</b>
 
-### Removing docker-compose version of FileFighter
+## Removing docker-compose version of FileFighter
 
 Navigate to the location of the _docker-compose_ file and type:
 
@@ -268,14 +304,14 @@ docker-compose down
 
 <small>Hint: This command wont remove the files uploaded.</small>
 
-## Troubleshooting
+# Troubleshooting
 
 If you encounter error messages like _"No Permission"_ try giving you the permission to execute files for all scripts (/home/YOUR_USERNAME/filefighter).
 
-## Remaining Files
+# Remaining Files
 
 All the remaining not explicitly explained files are important for the scripts to work and should not be changed manually.
 
-## Help
+# Help
 
 For further help, feedback or questions write us an [email](mailto:dev@filefighter.de).
