@@ -56,7 +56,7 @@ ffinstall() {
   if ! [[ $db_password ]]; then
     # Create new Password
     echo "Creating new random password for the database."
-    db_password=$(wget -qO- "https://www.passwordrandom.com/query?command=password&scheme=rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+    db_password=$(curl -s "https://www.passwordrandom.com/query?command=password&scheme=rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
     write $configFilePath db_password $db_password
   fi
 
