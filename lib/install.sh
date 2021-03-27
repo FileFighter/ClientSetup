@@ -10,14 +10,11 @@ ffinstall() {
   filehandlername="FileFighterFileHandler"
   dbname="FileFighterDB"
   networkname="FileFighterNetwork"
-  reverseproxyname="FileFighterReverseProxy"
 
   # latest stable versions.
   frontendVersion="latest"
   restVersion="latest"
   filehandlerVersion="latest"
-  proxyVersion="$(getTagsByName filefighter/reverseproxy | tail -1)"
-
 
   echo "Docker prerequisites matched. Docker instance running."
   echo "Reading in config file from: $configFilePath."
@@ -135,20 +132,11 @@ ffinstall() {
   echo "Downloading filefighter/frontend image."
   docker create \
     --network $networkname \
+    -p $app_port:80 \
     --name $frontendname filefighter/frontend:$frontendVersion >/dev/null 2>&1
 
   echo "Finished downloading."
   echo ""
-
-  # ReverseProxy
-  echo "Creating ReverseProxy Container with tag: $proxyVersion."
-  echo "Downloading filefighter/reverseproxy image."
-  docker create \
-    --network $networkname \
-    -p $app_port:80 \
-    --name=$reverseproxyname \
-    filefighter/reverseproxy:$proxyVersion >/dev/null 2>&1
-
 
   echo ""
   echo "Finished Building FileFighter."

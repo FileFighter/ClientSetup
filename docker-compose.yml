@@ -4,11 +4,16 @@ services:
     image: filefighter/frontend:stable
     networks:
       - FileFighterNetwork
+    depends_on:
+      - FileFighterREST
+      - FileFighterFileHandler
+    ports:
+      - "80:80"
   FileFighterREST:
     image: filefighter/rest:stable
     environment:
       DB_USERNAME: root
-      DB_PASSWORD: GUZFDEGFIDGSZGFZGZDGSZ
+      DB_PASSWORD: GUZFDEGFIDGSZGFZGZDGSZ #change this
       DB_NAME: filefighter
       DB_CONTAINER_NAME: FileFighterDB
       SPRING_PROFILES_ACTIVE: "prod"
@@ -23,17 +28,14 @@ services:
     environment:
       MONGO_INITDB: filefighter
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: GUZFDEGFIDGSZGFZGZDGSZ
+      MONGO_INITDB_ROOT_PASSWORD: GUZFDEGFIDGSZGFZGZDGSZ  #change this
     networks:
       - FileFighterNetwork
-  FileFighterReverseProxy:
-    image: filefighter/reverseproxy:v1.0.2
+  FileFighterFileHandler:
+    image: filefighter/filehandler:stable
     networks:
       - FileFighterNetwork
     depends_on:
-      - FileFighterFrontend
       - FileFighterREST
-    ports:
-    - "80:80"
 networks:
   FileFighterNetwork:
