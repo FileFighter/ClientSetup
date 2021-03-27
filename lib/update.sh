@@ -211,16 +211,16 @@ else
 docker container stop $filehandlername >/dev/null 2>&1 && docker container rm $filehandlername >/dev/null 2>&1
 docker rmi filefighter/filehandler:latest >/dev/null 2>&1
 
-  # REST APP
+  # FileHandler
   echo "Creating FileHandler Container, with tag: latest."
   echo "Downloading filefighter/filehandler image."
   docker create \
     --network $networkname \
-    --name $ilehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
+    --name $filehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
 
 
   echo "Finished downloading. Restarting the updated container..."
-  docker start $ilehandlername >/dev/null 2>&1
+  docker start $filehandlername >/dev/null 2>&1
   echo ""
 fi
 }
