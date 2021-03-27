@@ -85,6 +85,7 @@ if [[ "$(docker images -q filefighter/frontend:$frontendVersionRepo 2> /dev/null
   echo "Downloading filefighter/frontend image."
   docker create \
     --network $networkname \
+    -p $app_port:80 \
     --name $frontendname filefighter/frontend:$frontendVersionRepo >/dev/null 2>&1
 
   echo "Finished downloading. Starting the updated container..."
@@ -169,6 +170,7 @@ else
   echo "Downloading filefighter/frontend image."
   docker create \
     --network $networkname \
+    -p $app_port:80 \
     --name $frontendname filefighter/frontend:latest >/dev/null 2>&1
 
   echo "Finished downloading. Restarting the updated container..."

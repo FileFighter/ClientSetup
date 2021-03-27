@@ -125,7 +125,7 @@ ffinstall() {
   echo "Downloading filefighter/filehandler image."
   docker create \
     --network $networkname \
-    --name $ilehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
+    --name $filehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
 
   # Frontend
   echo "Creating Frontend Container, with tag: $frontendVersion."
