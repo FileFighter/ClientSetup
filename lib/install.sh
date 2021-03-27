@@ -7,6 +7,7 @@ ffinstall() {
   configFilePath=$(pwd)/config.cfg
   restname="FileFighterREST"
   frontendname="FileFighterFrontend"
+  filehandlername="FileFighterFileHandler"
   dbname="FileFighterDB"
   networkname="FileFighterNetwork"
   reverseproxyname="FileFighterReverseProxy"
@@ -14,6 +15,7 @@ ffinstall() {
   # latest stable versions.
   frontendVersion="latest"
   restVersion="latest"
+  filehandlerVersion="latest"
   proxyVersion="$(getTagsByName filefighter/reverseproxy | tail -1)"
 
 
@@ -65,10 +67,12 @@ ffinstall() {
     echo "Installing stable versions."
     frontendVersion="$(getTagsByName filefighter/frontend v | tail -1)"
     restVersion="$(getTagsByName filefighter/rest v | tail -1)"
+    filehandlerVersion="$(getTagsByName filefighter/filehandler v | tail -1)"
   else
     echo "Installing latest versions. Be aware that minor bugs could occur. Please report found bugs: filefigther@t-online.de."
     docker rmi filefighter/rest:latest >/dev/null 2>&1
     docker rmi filefighter/frontend:latest >/dev/null 2>&1
+    docker rmi filefighter/filehandler:latest >/dev/null 2>&1
     docker rmi mongo >/dev/null 2>&1
   fi
 
@@ -76,9 +80,9 @@ ffinstall() {
   echo "Finished reading config. Building containers..."
 
   # Check for already existing CONTAINERS.
-  if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $reverseproxyname) ]]; then
+  if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $filehandlername) ]]; then
     echo ""
-    echo "A container with already exists with the name $restname or $frontendname or $dbname."
+    echo "A container with already exists with the name $restname or $frontendname or $dbname or $filehandlername."
     echo "Maybe its the second time that you run this script. If not please remove these containers."
     echo "If you want to check for updates, run the update.sh script."
     echo ""
@@ -119,6 +123,13 @@ ffinstall() {
   echo "Finished downloading."
   echo ""
 
+  #FileHandler
+  echo "Creating FileHandler Container, with tag: $filehandlerVersion."
+  echo "Downloading filefighter/filehandler image."
+  docker create \
+    --network $networkname \
+    --name $ilehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
+
   # Frontend
   echo "Creating Frontend Container, with tag: $frontendVersion."
   echo "Downloading filefighter/frontend image."
@@ -138,7 +149,6 @@ ffinstall() {
     --name=$reverseproxyname \
     filefighter/reverseproxy:$proxyVersion >/dev/null 2>&1
 
-  # DataHandler
 
   echo ""
   echo "Finished Building FileFighter."
