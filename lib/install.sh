@@ -72,9 +72,9 @@ ffinstall() {
     filehandlerVersion="$(getTagsByName filefighter/filehandler v | tail -1)"
   else
     echo "Installing latest versions. Be aware that minor bugs could occur. Please report found bugs: filefigther@t-online.de."
-    docker rmi filefighter/rest:latest >/dev/null 2>&1
-    docker rmi filefighter/frontend:latest >/dev/null 2>&1
-    docker rmi filefighter/filehandler:latest >/dev/null 2>&1
+    docker rmi filefighter/rest:$restVersion >/dev/null 2>&1
+    docker rmi filefighter/frontend:$frontendVersion >/dev/null 2>&1
+    docker rmi filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
     docker rmi mongo >/dev/null 2>&1
   fi
 
