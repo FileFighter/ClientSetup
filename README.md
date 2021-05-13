@@ -7,7 +7,7 @@ Setup Scripts for clients to install FileFighter.
 - [Requirements](#requirements)
   * [Operating Systems](#operating-systems)
     + [Linux Distributions](#linux-distributions)
-    + [mac OS](#mac-os)
+    + [mac OS](#macos)
     + [Windows](#windows)
   * [Dependencies](#dependencies)
     + [Docker](#docker)
