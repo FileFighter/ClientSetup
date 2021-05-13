@@ -7,15 +7,19 @@ ffinstall() {
   configFilePath=$(pwd)/config.cfg
   restname="FileFighterREST"
   frontendname="FileFighterFrontend"
+  filehandlername="FileFighterFileHandler"
   dbname="FileFighterDB"
   networkname="FileFighterNetwork"
-  reverseproxyname="FileFighterReverseProxy"
 
   # latest stable versions.
   frontendVersion="latest"
   restVersion="latest"
-  proxyVersion="$(getTagsByName filefighter/reverseproxy | tail -1)"
+  filehandlerVersion="latest"
 
+  # cors profile
+  profile="prod"
+
+  volumesLocation="/home/$USER/filefighter/volumes"
 
   echo "Docker prerequisites matched. Docker instance running."
   echo "Reading in config file from: $configFilePath."
@@ -65,10 +69,12 @@ ffinstall() {
     echo "Installing stable versions."
     frontendVersion="$(getTagsByName filefighter/frontend v | tail -1)"
     restVersion="$(getTagsByName filefighter/rest v | tail -1)"
+    filehandlerVersion="$(getTagsByName filefighter/filehandler v | tail -1)"
   else
     echo "Installing latest versions. Be aware that minor bugs could occur. Please report found bugs: filefigther@t-online.de."
-    docker rmi filefighter/rest:latest >/dev/null 2>&1
-    docker rmi filefighter/frontend:latest >/dev/null 2>&1
+    docker rmi filefighter/rest:$restVersion >/dev/null 2>&1
+    docker rmi filefighter/frontend:$frontendVersion >/dev/null 2>&1
+    docker rmi filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
     docker rmi mongo >/dev/null 2>&1
   fi
 
@@ -76,9 +82,9 @@ ffinstall() {
   echo "Finished reading config. Building containers..."
 
   # Check for already existing CONTAINERS.
-  if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $reverseproxyname) ]]; then
+  if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $filehandlername) ]]; then
     echo ""
-    echo "A container with already exists with the name $restname or $frontendname or $dbname."
+    echo "A container with already exists with the name $restname or $frontendname or $dbname or $filehandlername."
     echo "Maybe its the second time that you run this script. If not please remove these containers."
     echo "If you want to check for updates, run the update.sh script."
     echo ""
@@ -100,7 +106,6 @@ ffinstall() {
     --network $networkname \
     --name $dbname mongo:latest >/dev/null 2>&1
 
-  echo "Finished downloading."
   echo ""
 
   # REST APP
@@ -111,12 +116,22 @@ ffinstall() {
     -e DB_PASSWORD=$db_password \
     -e DB_NAME=$db_name \
     -e DB_CONTAINER_NAME=$dbname \
-    -e SPRING_PROFILES_ACTIVE="prod" \
+    -e SPRING_PROFILES_ACTIVE=$profile \
     --expose 8080 \
     --network $networkname \
     --name $restname filefighter/rest:$restVersion >/dev/null 2>&1
 
-  echo "Finished downloading."
+  echo ""
+
+  #FileHandler
+  echo "Creating FileHandler Container, with tag: $filehandlerVersion."
+  echo "Downloading filefighter/filehandler image."
+  docker create \
+    -e PROFILE=$profile \
+    -v $volumesLocation:/workdir \
+    --network $networkname \
+    --name $filehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
+
   echo ""
 
   # Frontend
@@ -124,21 +139,11 @@ ffinstall() {
   echo "Downloading filefighter/frontend image."
   docker create \
     --network $networkname \
+    -p $app_port:80 \
     --name $frontendname filefighter/frontend:$frontendVersion >/dev/null 2>&1
 
   echo "Finished downloading."
   echo ""
-
-  # ReverseProxy
-  echo "Creating ReverseProxy Container with tag: $proxyVersion."
-  echo "Downloading filefighter/reverseproxy image."
-  docker create \
-    --network $networkname \
-    -p $app_port:80 \
-    --name=$reverseproxyname \
-    filefighter/reverseproxy:$proxyVersion >/dev/null 2>&1
-
-  # DataHandler
 
   echo ""
   echo "Finished Building FileFighter."
