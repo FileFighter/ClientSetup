@@ -106,7 +106,6 @@ ffinstall() {
     --network $networkname \
     --name $dbname mongo:latest >/dev/null 2>&1
 
-  echo "Finished downloading."
   echo ""
 
   # REST APP
@@ -122,7 +121,6 @@ ffinstall() {
     --network $networkname \
     --name $restname filefighter/rest:$restVersion >/dev/null 2>&1
 
-  echo "Finished downloading."
   echo ""
 
   #FileHandler
@@ -133,6 +131,8 @@ ffinstall() {
     -v $volumesLocation:/workdir \
     --network $networkname \
     --name $filehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
+
+  echo ""
 
   # Frontend
   echo "Creating Frontend Container, with tag: $frontendVersion."
