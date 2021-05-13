@@ -19,6 +19,8 @@ ffinstall() {
   # cors profile
   profile="prod"
 
+  volumesLocation="/home/$USER/filefighter/volumes"
+
   echo "Docker prerequisites matched. Docker instance running."
   echo "Reading in config file from: $configFilePath."
 
@@ -128,6 +130,7 @@ ffinstall() {
   echo "Downloading filefighter/filehandler image."
   docker create \
     -e PROFILE=$profile \
+    -v $volumesLocation:/workdir \
     --network $networkname \
     --name $filehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
 

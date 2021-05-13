@@ -9,6 +9,8 @@ dbname="FileFighterDB"
 # cors profile
 profile="prod"
 
+volumesLocation="/home/$USER/filefighter/volumes"
+
 ffupdate(){
 
 echo "Starting Update."
@@ -131,6 +133,7 @@ if [[ "$(docker images -q filefighter/filehandler:$filehandlerVersionRepo 2> /de
   echo "Downloading filefighter/filehandler image."
   docker create \
     -e PROFILE=$profile \
+    -v $volumesLocation:/workdir \
     --network $networkname \
     --name $filehandlername filefighter/filehandler:$filehandlerVersionRepo >/dev/null 2>&1
 
@@ -219,6 +222,7 @@ docker rmi filefighter/filehandler:latest >/dev/null 2>&1
   echo "Downloading filefighter/filehandler image."
   docker create \
     -e PROFILE=$profile \
+    -v $volumesLocation:/workdir \
     --network $networkname \
     --name $filehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
 
