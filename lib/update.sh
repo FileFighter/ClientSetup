@@ -1,12 +1,22 @@
+#!/usr/bin/env bash
+
 restname="FileFighterREST"
 frontendname="FileFighterFrontend"
+filehandlername="FileFighterFileHandler"
 networkname="FileFighterNetwork"
 dbname="FileFighterDB"
 
+# cors profile
+profile="prod"
+
+volumesLocation="/home/$USER/filefighter/volumes"
 
 ffupdate(){
 
-if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $reverseproxyname) ]]; then
+echo "Starting Update."
+date
+
+if [[ $(docker ps -a --format "{{.Names}}" | grep $restname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $frontendname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $dbname) ]] || [[ $(docker ps -a --format "{{.Names}}" | grep $filehandlername) ]]; then
    echo "Installation is fine, starting to read config..."
 else
   echo "FileFighter is not installed, run 'ffighter install' first"
@@ -69,6 +79,7 @@ ffupdateStable(){
 
 frontendVersionRepo="$(getTagsByName filefighter/frontend v | tail -1)"
 restVersionRepo="$(getTagsByName filefighter/rest v | tail -1)"
+filehandlerVersionRepo="$(getTagsByName filefighter/filehabdler v | tail -1)"
 
 if [[ "$(docker images -q filefighter/frontend:$frontendVersionRepo 2> /dev/null)" == "" ]]; then
   echo "New version for FileFighter Frontend available, downloading it"
@@ -78,6 +89,7 @@ if [[ "$(docker images -q filefighter/frontend:$frontendVersionRepo 2> /dev/null
   echo "Downloading filefighter/frontend image."
   docker create \
     --network $networkname \
+    -p $app_port:80 \
     --name $frontendname filefighter/frontend:$frontendVersionRepo >/dev/null 2>&1
 
   echo "Finished downloading. Starting the updated container..."
@@ -99,7 +111,7 @@ if [[ "$(docker images -q filefighter/rest:$restVersionRepo 2> /dev/null)" == ""
     -e DB_PASSWORD=$db_password \
     -e DB_NAME=$db_name \
     -e DB_CONTAINER_NAME=$dbname \
-    -e SPRING_PROFILES_ACTIVE="prod" \
+    -e SPRING_PROFILES_ACTIVE=$profile \
     --expose 8080 \
     --network $networkname \
     --name $restname filefighter/rest:$restVersionRepo >/dev/null 2>&1
@@ -110,6 +122,27 @@ if [[ "$(docker images -q filefighter/rest:$restVersionRepo 2> /dev/null)" == ""
   echo ""
 else
   echo "FileFighter FileFighter Rest is up to date"
+fi
+
+if [[ "$(docker images -q filefighter/filehandler:$filehandlerVersionRepo 2> /dev/null)" == "" ]]; then
+  echo "New version for FileFighter FileHandler available, downloading it"
+  docker container stop $filehandlername && docker container rm $filehandlername
+
+  # FileHandler
+  echo "Creating FileHandler Container, with tag: $filehandlerVersionRepo."
+  echo "Downloading filefighter/filehandler image."
+  docker create \
+    -e PROFILE=$profile \
+    -v $volumesLocation:/workdir \
+    --network $networkname \
+    --name $filehandlername filefighter/filehandler:$filehandlerVersionRepo >/dev/null 2>&1
+
+  echo "Finished downloading. Restarting the updated container..."
+  docker start $filehandlername
+
+  echo ""
+else
+  echo "FileFighter FileFighter FileHandler is up to date"
 fi
 }
 
@@ -128,6 +161,7 @@ fi
 
 frontendDigest="$(regctl image digest --list filefighter/frontend:latest)"
 restDigest="$(regctl image digest --list filefighter/rest:latest)"
+filehandlerDigest="$(regctl image digest --list filefighter/filehandler:latest)"
 
 if [[ "$( docker inspect --format='{{.RepoDigests}}' filefighter/frontend:latest 2> /dev/null)" == "[filefighter/frontend@$frontendDigest]" ]]; then
   echo "FileFighter Frontend is up to date"
@@ -142,6 +176,7 @@ else
   echo "Downloading filefighter/frontend image."
   docker create \
     --network $networkname \
+    -p $app_port:80 \
     --name $frontendname filefighter/frontend:latest >/dev/null 2>&1
 
   echo "Finished downloading. Restarting the updated container..."
@@ -164,13 +199,36 @@ docker rmi filefighter/rest:latest >/dev/null 2>&1
     -e DB_PASSWORD=$db_password \
     -e DB_NAME=$db_name \
     -e DB_CONTAINER_NAME=$dbname \
-    -e SPRING_PROFILES_ACTIVE="prod" \
+    -e SPRING_PROFILES_ACTIVE=$profile \
     --expose 8080 \
     --network $networkname \
     --name $restname filefighter/rest:latest >/dev/null 2>&1
 
   echo "Finished downloading. Restarting the updated container..."
   docker start $restname >/dev/null 2>&1
+  echo ""
+fi
+
+if [[ "$( docker inspect --format='{{.RepoDigests}}' filefighter/filehandler:latest 2> /dev/null)" == "[filefighter/filehandler@$restDigest]" ]]; then
+  echo "FileFighter FileHandler is up to date"
+else
+   echo "New version for FileFighter FileHandler available, downloading it"
+
+docker container stop $filehandlername >/dev/null 2>&1 && docker container rm $filehandlername >/dev/null 2>&1
+docker rmi filefighter/filehandler:latest >/dev/null 2>&1
+
+  # FileHandler
+  echo "Creating FileHandler Container, with tag: latest."
+  echo "Downloading filefighter/filehandler image."
+  docker create \
+    -e PROFILE=$profile \
+    -v $volumesLocation:/workdir \
+    --network $networkname \
+    --name $filehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
+
+
+  echo "Finished downloading. Restarting the updated container..."
+  docker start $filehandlername >/dev/null 2>&1
   echo ""
 fi
 }
