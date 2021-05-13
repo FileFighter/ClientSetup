@@ -6,6 +6,8 @@ filehandlername="FileFighterFileHandler"
 networkname="FileFighterNetwork"
 dbname="FileFighterDB"
 
+# cors profile
+profile="prod"
 
 ffupdate(){
 
@@ -107,7 +109,7 @@ if [[ "$(docker images -q filefighter/rest:$restVersionRepo 2> /dev/null)" == ""
     -e DB_PASSWORD=$db_password \
     -e DB_NAME=$db_name \
     -e DB_CONTAINER_NAME=$dbname \
-    -e SPRING_PROFILES_ACTIVE="prod" \
+    -e SPRING_PROFILES_ACTIVE=$profile \
     --expose 8080 \
     --network $networkname \
     --name $restname filefighter/rest:$restVersionRepo >/dev/null 2>&1
@@ -124,10 +126,11 @@ if [[ "$(docker images -q filefighter/filehandler:$filehandlerVersionRepo 2> /de
   echo "New version for FileFighter FileHandler available, downloading it"
   docker container stop $filehandlername && docker container rm $filehandlername
 
-  # REST APP
+  # FileHandler
   echo "Creating FileHandler Container, with tag: $filehandlerVersionRepo."
   echo "Downloading filefighter/filehandler image."
   docker create \
+    -e PROFILE=$profile \
     --network $networkname \
     --name $filehandlername filefighter/filehandler:$filehandlerVersionRepo >/dev/null 2>&1
 
@@ -193,7 +196,7 @@ docker rmi filefighter/rest:latest >/dev/null 2>&1
     -e DB_PASSWORD=$db_password \
     -e DB_NAME=$db_name \
     -e DB_CONTAINER_NAME=$dbname \
-    -e SPRING_PROFILES_ACTIVE="prod" \
+    -e SPRING_PROFILES_ACTIVE=$profile \
     --expose 8080 \
     --network $networkname \
     --name $restname filefighter/rest:latest >/dev/null 2>&1
@@ -215,6 +218,7 @@ docker rmi filefighter/filehandler:latest >/dev/null 2>&1
   echo "Creating FileHandler Container, with tag: latest."
   echo "Downloading filefighter/filehandler image."
   docker create \
+    -e PROFILE=$profile \
     --network $networkname \
     --name $filehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
 

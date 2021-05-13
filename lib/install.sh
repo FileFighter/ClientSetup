@@ -16,6 +16,9 @@ ffinstall() {
   restVersion="latest"
   filehandlerVersion="latest"
 
+  # cors profile
+  profile="prod"
+
   echo "Docker prerequisites matched. Docker instance running."
   echo "Reading in config file from: $configFilePath."
 
@@ -112,7 +115,7 @@ ffinstall() {
     -e DB_PASSWORD=$db_password \
     -e DB_NAME=$db_name \
     -e DB_CONTAINER_NAME=$dbname \
-    -e SPRING_PROFILES_ACTIVE="prod" \
+    -e SPRING_PROFILES_ACTIVE=$profile \
     --expose 8080 \
     --network $networkname \
     --name $restname filefighter/rest:$restVersion >/dev/null 2>&1
@@ -124,6 +127,7 @@ ffinstall() {
   echo "Creating FileHandler Container, with tag: $filehandlerVersion."
   echo "Downloading filefighter/filehandler image."
   docker create \
+    -e PROFILE=$profile \
     --network $networkname \
     --name $filehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
 
