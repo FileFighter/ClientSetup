@@ -209,7 +209,7 @@ docker rmi filefighter/rest:latest >/dev/null 2>&1
   echo ""
 fi
 
-if [[ "$( docker inspect --format='{{.RepoDigests}}' filefighter/filehandler:latest 2> /dev/null)" == "[filefighter/filehandler@$restDigest]" ]]; then
+if [[ "$( docker inspect --format='{{.RepoDigests}}' filefighter/filehandler:latest 2> /dev/null)" == "[filefighter/filehandler@$filehandlerDigest]" ]]; then
   echo "FileFighter FileHandler is up to date"
 else
    echo "New version for FileFighter FileHandler available, downloading it"
@@ -224,7 +224,7 @@ docker rmi filefighter/filehandler:latest >/dev/null 2>&1
     -e PROFILE=$profile \
     -v $volumesLocation:/workdir \
     --network $networkname \
-    --name $filehandlername filefighter/filehandler:$filehandlerVersion >/dev/null 2>&1
+    --name $filehandlername filefighter/filehandler:latest >/dev/null 2>&1
 
 
   echo "Finished downloading. Restarting the updated container..."
