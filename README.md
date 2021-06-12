@@ -277,7 +277,7 @@ This will also start all services and make them available [here](http://localhos
 
 # Removing FileFighter
 
-## Remving the command line application
+## Removing the command line application
 
 The application is installed under _/usr/bin/ffighter_.
 Remove it by typing:
@@ -302,7 +302,7 @@ Navigate to the location of the _docker-compose_ file and type:
 docker-compose down
 ```
 
-<small>Hint: This command wont remove the files uploaded.</small>
+<small>Hint: This command won't remove the files uploaded.</small>
 
 # Troubleshooting
 
