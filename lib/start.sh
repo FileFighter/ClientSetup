@@ -25,6 +25,7 @@ ffstart() {
     echo "Finished starting FileFighter services."
     echo "Frontend is running here: http://localhost:$appport."
     echo "You can stop them again with 'ffighter stop'."
+    echo "The default login is admin admin."
     echo ""
     exit 0
   fi
