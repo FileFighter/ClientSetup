@@ -1,41 +1,60 @@
 version: "3.3"
 services:
-  FileFighterFrontend:
+  frontend:
     image: filefighter/frontend:stable
     networks:
       - FileFighterNetwork
     depends_on:
-      - FileFighterREST
-      - FileFighterFileHandler
+      - fss
+      - filehandler
     ports:
       - "80:80"
-  FileFighterREST:
-    image: filefighter/rest:stable
+
+  fss:
+    image: filefighter/filesystemservice:stable
     environment:
       DB_USERNAME: root
-      DB_PASSWORD: GUZFDEGFIDGSZGFZGZDGSZ #change this
+      DB_PASSWORD: test
       DB_NAME: filefighter
-      DB_CONTAINER_NAME: FileFighterDB
+      DB_CONTAINER_NAME: db
+      JWT_SECRET: JWTs3cr3t
+      FRONTEND_ORIGIN: http://localhost
       SPRING_PROFILES_ACTIVE: "prod"
-    expose:
-      - "8080"
     depends_on:
-      - FileFighterDB
+      - db 
     networks:
       - FileFighterNetwork
-  FileFighterDB:
+
+  db:
     image: mongo:latest
     environment:
       MONGO_INITDB: filefighter
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: GUZFDEGFIDGSZGFZGZDGSZ  #change this
+      MONGO_INITDB_ROOT_PASSWORD: test
     networks:
       - FileFighterNetwork
-  FileFighterFileHandler:
+
+  filehandler:
     image: filefighter/filehandler:stable
     networks:
       - FileFighterNetwork
     depends_on:
-      - FileFighterREST
+      - fss
+
+  ftp-service:
+    image: filefighter/ftp-service:stable
+    environment:
+      FTP_SERVICE_BACKEND_URL: http://fss:8080
+      FTP_SERVICE_FILEHANDLER_URL: http://filehandler:5000
+    networks:
+      - FileFighterNetwork
+    depends_on:
+      - fss
+      - filehandler
+    # TODO: could be handled by the nginx
+    ports:
+      - "2121:2121"
+      - "10000-10010:10000-10010"
+
 networks:
   FileFighterNetwork:
