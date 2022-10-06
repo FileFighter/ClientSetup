@@ -1,14 +1,32 @@
+# -------------------------------------------------------------------------
+#   _____   _   _          _____   _           _       _
+#  |  ___| (_) | |   ___  |  ___| (_)   __ _  | |__   | |_    ___   _ __
+#  | |_    | | | |  / _ \ | |_    | |  / _  | | '_ \  | __|  / _ \ | '__|
+#  |  _|   | | | | |  __/ |  _|   | | | (_| | | | | | | |_  |  __/ | |
+#  |_|     |_| |_|  \___| |_|     |_|  \__, | |_| |_|  \__|  \___| |_|
+#                                      |___/
+# 
+# This is the FileFighter docker-compose file
+# 
+# DO NOT CHANGE THIS FILE DIRECTY!
+# If you want to configure your instance of FileFighter edit the .env file.
+#
+# Starting FileFighter:
+# docker-compose up -d
+#
+# -------------------------------------------------------------------------
 version: "3.3"
 services:
   frontend:
     image: filefighter/frontend:stable
-    networks:
-      - FileFighterNetwork
+    ports:
+      - "80:80"
     depends_on:
       - fss
       - filehandler
-    ports:
-      - "80:80"
+    networks:
+      - FileFighterNetwork
+    restart: ${RESTART_POLICY}
 
   fss:
     image: filefighter/filesystemservice:stable
@@ -24,6 +42,7 @@ services:
       - db 
     networks:
       - FileFighterNetwork
+    restart: ${RESTART_POLICY}
 
   db:
     image: mongo:latest
@@ -33,28 +52,31 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: test
     networks:
       - FileFighterNetwork
+    restart: ${RESTART_POLICY}
 
   filehandler:
     image: filefighter/filehandler:stable
-    networks:
-      - FileFighterNetwork
     depends_on:
       - fss
+    networks:
+      - FileFighterNetwork
+    restart: ${RESTART_POLICY}
 
   ftp-service:
     image: filefighter/ftp-service:stable
     environment:
       FTP_SERVICE_BACKEND_URL: http://fss:8080
       FTP_SERVICE_FILEHANDLER_URL: http://filehandler:5000
-    networks:
-      - FileFighterNetwork
-    depends_on:
-      - fss
-      - filehandler
     # TODO: could be handled by the nginx
     ports:
       - "2121:2121"
       - "10000-10010:10000-10010"
+    depends_on:
+      - fss
+      - filehandler
+    networks:
+      - FileFighterNetwork
+    restart: ${RESTART_POLICY}
 
 networks:
   FileFighterNetwork:
