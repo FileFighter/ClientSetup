@@ -18,9 +18,9 @@
 version: "3.3"
 services:
   frontend:
-    image: filefighter/frontend:stable
+    image: filefighter/frontend:${RELEASE_CHANNEL}
     ports:
-      - "80:80"
+      - ${FRONTEND_PORT}:80
     depends_on:
       - fss
       - filehandler
@@ -29,14 +29,14 @@ services:
     restart: ${RESTART_POLICY}
 
   fss:
-    image: filefighter/filesystemservice:stable
+    image: filefighter/filesystemservice:${RELEASE_CHANNEL}
     environment:
-      DB_USERNAME: root
-      DB_PASSWORD: test
-      DB_NAME: filefighter
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
       DB_CONTAINER_NAME: db
-      JWT_SECRET: JWTs3cr3t
-      FRONTEND_ORIGIN: http://localhost
+      JWT_SECRET: ${JWT_SECRET} 
+      FRONTEND_ORIGIN: ${FRONTEND_PROTOCOL}://${FRONTEND_HOST}:${FRONTEND_PORT}
       SPRING_PROFILES_ACTIVE: "prod"
     depends_on:
       - db 
@@ -47,9 +47,9 @@ services:
   db:
     image: mongo:latest
     environment:
-      MONGO_INITDB: filefighter
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: test
+      MONGO_INITDB: ${DB_NAME}
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
     networks:
       - FileFighterNetwork
     volumes:
@@ -57,7 +57,7 @@ services:
     restart: ${RESTART_POLICY}
 
   filehandler:
-    image: filefighter/filehandler:stable
+    image: filefighter/filehandler:${RELEASE_CHANNEL}
     depends_on:
       - fss
     networks:
@@ -67,7 +67,7 @@ services:
     restart: ${RESTART_POLICY}
 
   ftp-service:
-    image: filefighter/ftp-service:stable
+    image: filefighter/ftp-service:${RELEASE_CHANNEL}
     environment:
       FTP_SERVICE_BACKEND_URL: http://fss:8080
       FTP_SERVICE_FILEHANDLER_URL: http://filehandler:5000
