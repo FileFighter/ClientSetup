@@ -52,6 +52,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: test
     networks:
       - FileFighterNetwork
+    volumes:
+      - ${DB_VOLUME}:/data/db
     restart: ${RESTART_POLICY}
 
   filehandler:
@@ -60,6 +62,8 @@ services:
       - fss
     networks:
       - FileFighterNetwork
+    volumes:
+      - ${FILEHANDLER_VOLUME}:/workdir
     restart: ${RESTART_POLICY}
 
   ftp-service:
