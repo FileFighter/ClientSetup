@@ -5,9 +5,9 @@
 #  |  _|   | | | | |  __/ |  _|   | | | (_| | | | | | | |_  |  __/ | |
 #  |_|     |_| |_|  \___| |_|     |_|  \__, | |_| |_|  \__|  \___| |_|
 #                                      |___/
-# 
+#
 # This is the FileFighter docker-compose file
-# 
+#
 # DO NOT CHANGE THIS FILE DIRECTY!
 # If you want to configure your instance of FileFighter edit the .env file.
 #
@@ -18,7 +18,7 @@
 version: "3.3"
 services:
   frontend:
-    image: filefighter/frontend:${RELEASE_CHANNEL}
+    image: filefighter/frontend:feature
     ports:
       - ${FRONTEND_PORT}:80
     depends_on:
@@ -29,17 +29,17 @@ services:
     restart: ${RESTART_POLICY}
 
   fss:
-    image: filefighter/filesystemservice:${RELEASE_CHANNEL}
+    image: filefighter/rest:${RELEASE_CHANNEL}
     environment:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
       DB_CONTAINER_NAME: db
-      JWT_SECRET: ${JWT_SECRET} 
+      JWT_SECRET: ${JWT_SECRET}
       FRONTEND_ORIGIN: ${FRONTEND_PROTOCOL}://${FRONTEND_HOST}:${FRONTEND_PORT}
       SPRING_PROFILES_ACTIVE: "prod"
     depends_on:
-      - db 
+      - db
     networks:
       - FileFighterNetwork
     restart: ${RESTART_POLICY}
@@ -50,14 +50,28 @@ services:
       MONGO_INITDB: ${DB_NAME}
       MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+      FH_DB_USERNAME: ${FH_DB_USERNAME}
+      FH_DB_PASSWORD: ${FH_DB_PASSWORD}
+      FH_DB_NAME: ${FH_DB_NAME}
     networks:
       - FileFighterNetwork
     volumes:
       - ${DB_VOLUME}:/data/db
+      - ./docker-entrypoint-initdb.d/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
     restart: ${RESTART_POLICY}
+    ports:
+      - 27017:27017
 
   filehandler:
-    image: filefighter/filehandler:${RELEASE_CHANNEL}
+    image: filefighter/filehandler:feature
+    environment:
+      DB_USERNAME: ${FH_DB_USERNAME}
+      DB_PASSWORD: ${FH_DB_PASSWORD}
+      DB_NAME: ${FH_DB_NAME}
+      DB_CONTAINER_NAME: db
+      FILESYSTEMSERVICE_URL: fss
+      FILESYSTEMSERVICE_PORT: 8080
+      ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
     depends_on:
       - fss
     networks:
