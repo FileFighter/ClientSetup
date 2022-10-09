@@ -29,7 +29,7 @@ services:
     restart: ${RESTART_POLICY}
 
   fss:
-    image: filefighter/rest:${RELEASE_CHANNEL}
+    image: filefighter/filesystemservice:feature
     environment:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
@@ -59,8 +59,6 @@ services:
       - ${DB_VOLUME}:/data/db
       - ./docker-entrypoint-initdb.d/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
     restart: ${RESTART_POLICY}
-    ports:
-      - 27017:27017
 
   filehandler:
     image: filefighter/filehandler:feature
@@ -85,7 +83,8 @@ services:
     environment:
       FTP_SERVICE_BACKEND_URL: http://fss:8080
       FTP_SERVICE_FILEHANDLER_URL: http://filehandler:5000
-    # TODO: could be handled by the nginx
+    # IDEA: make this customizable
+    # IDEA: implement tls for ftp?
     ports:
       - "2121:2121"
       - "10000-10010:10000-10010"
