@@ -8,7 +8,7 @@
 #
 # This is the FileFighter docker-compose file
 #
-# DO NOT CHANGE THIS FILE DIRECTY!
+# DO NOT CHANGE THIS FILE DIRECTY (unless you know what you are doing)!
 # If you want to configure your instance of FileFighter edit the .env file.
 #
 # Starting FileFighter:
@@ -36,7 +36,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_CONTAINER_NAME: db
       JWT_SECRET: ${JWT_SECRET}
-      FRONTEND_ORIGIN: ${FRONTEND_PROTOCOL}://${FRONTEND_HOST}:${FRONTEND_PORT}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN} # FIXME: This option is ignored by spring
       SPRING_PROFILES_ACTIVE: "prod"
     depends_on:
       - db
@@ -70,6 +70,7 @@ services:
       FILESYSTEMSERVICE_URL: fss
       FILESYSTEMSERVICE_PORT: 8080
       ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN}
     depends_on:
       - fss
     networks:
