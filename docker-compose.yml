@@ -82,7 +82,8 @@ services:
   ftp-service:
     image: filefighter/ftp-service:${RELEASE_CHANNEL}
     environment:
-      FTP_SERVICE_BACKEND_URL: http://fss:8080
+      # TODO: remove after fixing the paths in fss
+      FTP_SERVICE_BACKEND_URL: http://fss:8080/api
       FTP_SERVICE_FILEHANDLER_URL: http://filehandler:5000
     # IDEA: make this customizable
     # IDEA: implement tls for ftp?
