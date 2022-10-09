@@ -1,41 +1,101 @@
+# -------------------------------------------------------------------------
+#   _____   _   _          _____   _           _       _
+#  |  ___| (_) | |   ___  |  ___| (_)   __ _  | |__   | |_    ___   _ __
+#  | |_    | | | |  / _ \ | |_    | |  / _  | | '_ \  | __|  / _ \ | '__|
+#  |  _|   | | | | |  __/ |  _|   | | | (_| | | | | | | |_  |  __/ | |
+#  |_|     |_| |_|  \___| |_|     |_|  \__, | |_| |_|  \__|  \___| |_|
+#                                      |___/
+#
+# This is the FileFighter docker-compose file
+#
+# DO NOT CHANGE THIS FILE DIRECTY (unless you know what you are doing)!
+# If you want to configure your instance of FileFighter edit the .env file.
+#
+# Starting FileFighter:
+# docker-compose up -d
+#
+# -------------------------------------------------------------------------
 version: "3.3"
 services:
-  FileFighterFrontend:
-    image: filefighter/frontend:stable
-    networks:
-      - FileFighterNetwork
-    depends_on:
-      - FileFighterREST
-      - FileFighterFileHandler
+  frontend:
+    image: filefighter/frontend:feature
     ports:
-      - "80:80"
-  FileFighterREST:
-    image: filefighter/rest:stable
-    environment:
-      DB_USERNAME: root
-      DB_PASSWORD: GUZFDEGFIDGSZGFZGZDGSZ #change this
-      DB_NAME: filefighter
-      DB_CONTAINER_NAME: FileFighterDB
-      SPRING_PROFILES_ACTIVE: "prod"
-    expose:
-      - "8080"
+      - ${FRONTEND_PORT}:80
     depends_on:
-      - FileFighterDB
+      - fss
+      - filehandler
     networks:
       - FileFighterNetwork
-  FileFighterDB:
+    restart: ${RESTART_POLICY}
+
+  fss:
+    image: filefighter/filesystemservice:feature
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_CONTAINER_NAME: db
+      JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN} # FIXME: This option is ignored by spring
+      SPRING_PROFILES_ACTIVE: "prod"
+    depends_on:
+      - db
+    networks:
+      - FileFighterNetwork
+    restart: ${RESTART_POLICY}
+
+  db:
     image: mongo:latest
     environment:
-      MONGO_INITDB: filefighter
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: GUZFDEGFIDGSZGFZGZDGSZ  #change this
+      MONGO_INITDB: ${DB_NAME}
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+      FH_DB_USERNAME: ${FH_DB_USERNAME}
+      FH_DB_PASSWORD: ${FH_DB_PASSWORD}
+      FH_DB_NAME: ${FH_DB_NAME}
     networks:
       - FileFighterNetwork
-  FileFighterFileHandler:
-    image: filefighter/filehandler:stable
-    networks:
-      - FileFighterNetwork
+    volumes:
+      - ${DB_VOLUME}:/data/db
+      - ./docker-entrypoint-initdb.d/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
+    restart: ${RESTART_POLICY}
+
+  filehandler:
+    image: filefighter/filehandler:feature
+    environment:
+      DB_USERNAME: ${FH_DB_USERNAME}
+      DB_PASSWORD: ${FH_DB_PASSWORD}
+      DB_NAME: ${FH_DB_NAME}
+      DB_CONTAINER_NAME: db
+      FILESYSTEMSERVICE_URL: fss
+      FILESYSTEMSERVICE_PORT: 8080
+      ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN}
     depends_on:
-      - FileFighterREST
+      - fss
+    networks:
+      - FileFighterNetwork
+    volumes:
+      - ${FILEHANDLER_VOLUME}:/workdir
+    restart: ${RESTART_POLICY}
+
+  ftp-service:
+    image: filefighter/ftp-service:${RELEASE_CHANNEL}
+    environment:
+      # TODO: remove after fixing the paths in fss
+      FTP_SERVICE_BACKEND_URL: http://fss:8080/api
+      FTP_SERVICE_FILEHANDLER_URL: http://filehandler:5000
+    # IDEA: make this customizable
+    # IDEA: implement tls for ftp?
+    ports:
+      - "2121:2121"
+      - "10000-10010:10000-10010"
+    depends_on:
+      - fss
+      - filehandler
+    networks:
+      - FileFighterNetwork
+    restart: ${RESTART_POLICY}
+
 networks:
   FileFighterNetwork:
